@@ -174,7 +174,7 @@ export default function AdoptPage() {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1"
+                className="hover:cursor-pointer text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1"
               >
                 <svg
                   className="h-4 w-4"
@@ -249,7 +249,11 @@ export default function AdoptPage() {
         {/* Load More - only show if there are results */}
         {filteredPets.length > 0 && filteredPets.length >= 8 && (
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg">
+            <Button
+              className="hover:cursor-pointer"
+              variant="outline"
+              size="lg"
+            >
               Load More Pets
             </Button>
           </div>

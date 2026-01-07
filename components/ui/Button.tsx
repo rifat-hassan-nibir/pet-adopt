@@ -37,9 +37,9 @@ export default function Button({
 
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${
-        fullWidth ? "w-full" : ""
-      } ${className}`}
+      className={`hover:cursor-pointer ${baseStyles} ${variants[variant]} ${
+        sizes[size]
+      } ${fullWidth ? "w-full" : ""} ${className}`}
       {...props}
     >
       {children}

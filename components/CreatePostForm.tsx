@@ -103,7 +103,7 @@ export default function CreatePostForm({
               <Link href="/login" onClick={onCancel}>
                 <button
                   type="button"
-                  className="px-4 py-2 text-sm font-medium text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors"
+                  className="hover:cursor-pointer px-4 py-2 text-sm font-medium text-amber-900 bg-amber-100 hover:bg-amber-200 rounded-lg transition-colors"
                 >
                   Log in
                 </button>
@@ -111,7 +111,7 @@ export default function CreatePostForm({
               <Link href="/signup" onClick={onCancel}>
                 <button
                   type="button"
-                  className="px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors"
+                  className="hover:cursor-pointer px-4 py-2 text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors"
                 >
                   Sign up
                 </button>
@@ -153,7 +153,7 @@ export default function CreatePostForm({
                   e.stopPropagation();
                   setImagePreview(null);
                 }}
-                className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                className="hover:cursor-pointer absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

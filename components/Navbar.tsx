@@ -86,7 +86,11 @@ export default function Navbar() {
             {/* Right Side Actions - Desktop */}
             <div className="hidden md:flex items-center gap-3">
               {/* Create Post Button */}
-              <Button size="sm" onClick={handleCreatePostClick}>
+              <Button
+                className="hover:cursor-pointer"
+                size="sm"
+                onClick={handleCreatePostClick}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-2"
@@ -108,7 +112,7 @@ export default function Navbar() {
               <div className="relative" ref={avatarDropdownRef}>
                 <button
                   onClick={() => setIsAvatarDropdownOpen(!isAvatarDropdownOpen)}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 hover:bg-emerald-200 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                  className="hover:cursor-pointer flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 hover:bg-emerald-200 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                   aria-haspopup="true"
                   aria-expanded={isAvatarDropdownOpen}
                   aria-label="User menu"

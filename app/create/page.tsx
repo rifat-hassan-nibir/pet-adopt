@@ -131,7 +131,7 @@ export default function CreatePostPage() {
                         e.stopPropagation();
                         setImagePreview(null);
                       }}
-                      className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                      className="hover:cursor-pointer absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

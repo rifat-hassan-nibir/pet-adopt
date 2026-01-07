@@ -127,7 +127,7 @@ export function Toast({
       <p className="flex-1 text-sm font-medium">{message}</p>
       <button
         onClick={handleClose}
-        className="shrink-0 p-1 rounded-lg hover:bg-black/5 transition-colors"
+        className="hover:cursor-pointer shrink-0 p-1 rounded-lg hover:bg-black/5 transition-colors"
         aria-label="Dismiss notification"
       >
         <svg

@@ -120,7 +120,7 @@ export default function ConfirmDialog({
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className={`flex-1 px-4 py-2 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 ${buttonColors[variant]}`}
+            className={`hover:cursor-pointer flex-1 px-4 py-2 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 ${buttonColors[variant]}`}
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">

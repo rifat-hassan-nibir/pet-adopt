@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import SkipLink from "@/components/ui/SkipLink";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
@@ -39,7 +38,6 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${poppins.variable} antialiased min-h-screen flex flex-col`}
       >
-        <SkipLink />
         <Navbar />
         <main id="main-content" className="grow">
           {children}

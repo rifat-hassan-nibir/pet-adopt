@@ -46,7 +46,7 @@ export default function AdoptionCard({
         {/* Favorite Button */}
         <button
           onClick={() => setIsFavorited(!isFavorited)}
-          className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${
+          className={`hover:cursor-pointer absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${
             isFavorited
               ? "bg-red-500 text-white"
               : "bg-white/90 text-gray-600 hover:text-red-500"

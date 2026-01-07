@@ -82,7 +82,7 @@ export default function Modal({
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="hover:cursor-pointer p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="Close modal"
           >
             <svg

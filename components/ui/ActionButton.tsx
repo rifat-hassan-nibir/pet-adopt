@@ -29,7 +29,7 @@ export default function ActionButton({
 
   return (
     <button
-      className={`inline-flex items-center justify-center rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`hover:cursor-pointer inline-flex items-center justify-center rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {children}

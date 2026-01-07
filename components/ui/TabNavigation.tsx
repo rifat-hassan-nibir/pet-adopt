@@ -18,7 +18,7 @@ export default function TabNavigation({
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`relative px-4 sm:px-6 py-3 text-sm font-medium transition-colors whitespace-nowrap
+            className={`hover:cursor-pointer relative px-4 sm:px-6 py-3 text-sm font-medium transition-colors whitespace-nowrap
               ${
                 activeTab === tab.id
                   ? "text-emerald-600 border-b-2 border-emerald-600"

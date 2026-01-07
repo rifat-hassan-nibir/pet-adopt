@@ -515,7 +515,7 @@ export default function ProfilePage() {
                                   </svg>
                                   Approve
                                 </Button>
-                                <button className="flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors inline-flex items-center justify-center">
+                                <button className="hover:cursor-pointer flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors inline-flex items-center justify-center">
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-4 w-4 mr-1"
@@ -695,7 +695,7 @@ export default function ProfilePage() {
                 <>
                   <button
                     onClick={handleReject}
-                    className="flex-1 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors inline-flex items-center justify-center gap-2"
+                    className="hover:cursor-pointer flex-1 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors inline-flex items-center justify-center gap-2"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
