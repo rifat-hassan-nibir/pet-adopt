@@ -1,6 +1,7 @@
 import AdoptionCard from "@/components/AdoptionCard";
 import Button from "@/components/ui/Button";
 import { getAllPets } from "@/database/query";
+import { Pet } from "@/lib/types";
 import Link from "next/link";
 
 export default async function HomePage() {
@@ -77,7 +78,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {pets.map((pet) => (
+            {pets.map((pet: Pet) => (
               <AdoptionCard
                 key={pet.id}
                 id={pet.id}
