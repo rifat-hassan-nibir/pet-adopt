@@ -1,10 +1,10 @@
 import AdoptionCard from "@/components/AdoptionCard";
 import Button from "@/components/ui/Button";
-import { getFeaturedPets } from "@/lib/data";
+import { getAllPets } from "@/database/query";
 import Link from "next/link";
 
-export default function HomePage() {
-  const featuredPets = getFeaturedPets();
+export default async function HomePage() {
+  const pets = await getAllPets(8);
 
   return (
     <div>
@@ -77,12 +77,12 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredPets.map((pet) => (
+            {pets.map((pet) => (
               <AdoptionCard
                 key={pet.id}
                 id={pet.id}
                 name={pet.name}
-                type={pet.type}
+                category={pet.category}
                 location={pet.location}
                 image={pet.image}
                 age={pet.age}

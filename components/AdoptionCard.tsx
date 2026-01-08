@@ -7,20 +7,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Button from "./ui/Button";
-
-interface AdoptionCardProps {
-  id: string;
-  name: string;
-  type: string;
-  location: string;
-  image: string;
-  age?: string;
-}
+import { AdoptionCardProps } from "@/lib/types";
 
 export default function AdoptionCard({
   id,
   name,
-  type,
+  category,
   location,
   image,
   age,
@@ -33,14 +25,14 @@ export default function AdoptionCard({
       <div className="relative h-48 sm:h-56 overflow-hidden">
         <Image
           src={image}
-          alt={`${name} - ${type} for adoption`}
+          alt={`${name} - ${category} for adoption`}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        {/* Type Badge */}
+        {/* category Badge */}
         <div className="absolute top-3 left-3">
           <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-gray-700">
-            {type}
+            {category}
           </span>
         </div>
         {/* Favorite Button */}
