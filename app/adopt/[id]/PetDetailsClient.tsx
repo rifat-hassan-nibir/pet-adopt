@@ -236,7 +236,7 @@ export default function PetDetailsClient({
                   key={similarPet.id}
                   id={similarPet.id}
                   name={similarPet.name}
-                  type={similarPet.category}
+                  category={similarPet.category}
                   location={similarPet.location}
                   image={similarPet.image}
                   age={similarPet.age}
