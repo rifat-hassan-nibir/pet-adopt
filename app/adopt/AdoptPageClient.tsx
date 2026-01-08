@@ -154,7 +154,7 @@ export default function AdoptPageClient({ pets }: { pets: Pet[] }) {
         {/* Pet Grid or Empty State */}
         {pets.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {pets.map((pet) => (
+            {pets.map((pet: Pet) => (
               <AdoptionCard
                 key={pet.id}
                 id={pet.id}
