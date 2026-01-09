@@ -1,21 +1,43 @@
 "use client";
 
+import { loginWithEmailPassword } from "@/app/actions/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [formState, setFormState] = useState({
+    loading: false,
+    error: "",
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // UI only - would authenticate in real app
-    alert("Login successful! (Demo only)");
+
+    setFormState({ ...formState, loading: true, error: "" });
+
+    const response = await loginWithEmailPassword(formData);
+
+    if (response.success) {
+      setFormState({ ...formState, loading: false, error: "" });
+      router.push("/profile");
+    } else if (!response.success && response.error) {
+      setFormState({ ...formState, loading: false, error: response.error });
+    } else {
+      setFormState({
+        ...formState,
+        loading: false,
+        error: "An unknown error occurred.",
+      });
+    }
   };
 
   return (
@@ -122,14 +144,18 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+        {formState.error && (
+          <p className="text-red-600 text-sm mt-2">{formState.error}</p>
+        )}
 
         <Button
+          disabled={formState.loading}
           className="hover:cursor-pointer"
           type="submit"
           fullWidth
           size="lg"
         >
-          Sign In
+          {formState.loading ? "Signing in..." : "Sign In"}
         </Button>
       </form>
 

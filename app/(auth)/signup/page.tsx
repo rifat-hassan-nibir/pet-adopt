@@ -28,12 +28,16 @@ export default function SignUpPage() {
 
     const result = await signUpWithEmailPassword(formData);
 
-    if (result && result.success) {
+    if (result.success) {
       router.push("/login");
-    }
-
-    if (result && !result.success && result.error) {
+    } else if (!result.success && result.error) {
       setFormState({ ...formState, loading: false, error: result.error });
+    } else {
+      setFormState({
+        ...formState,
+        loading: false,
+        error: "An unknown error occurred.",
+      });
     }
   };
 
