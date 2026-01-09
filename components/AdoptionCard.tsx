@@ -20,7 +20,7 @@ export default function AdoptionCard({
   const [isFavorited, setIsFavorited] = useState(false);
 
   return (
-    <article className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-emerald-100 transition-all duration-300 group">
+    <article className="flex flex-col h-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-emerald-100 transition-all duration-300 group">
       {/* Image Container */}
       <div className="relative h-48 sm:h-56 overflow-hidden">
         <Image
@@ -68,7 +68,7 @@ export default function AdoptionCard({
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-4 flex flex-col grow">
         <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">
           {name}
         </h3>
@@ -120,7 +120,7 @@ export default function AdoptionCard({
           )}
         </div>
 
-        <Link href={`/adopt/${id}`}>
+        <Link href={`/adopt/${id}`} className="mt-auto">
           <Button variant="outline" fullWidth>
             View Details
           </Button>
