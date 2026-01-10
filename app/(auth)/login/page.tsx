@@ -27,7 +27,6 @@ export default function LoginPage() {
     const response = await loginWithEmailPassword(formData);
 
     if (response.success) {
-      setFormState({ ...formState, loading: false, error: "" });
       router.push("/profile");
     } else if (!response.success && response.error) {
       setFormState({ ...formState, loading: false, error: response.error });
