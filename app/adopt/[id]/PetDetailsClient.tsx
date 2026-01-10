@@ -1,22 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import AdoptionCard from "@/components/AdoptionCard";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Textarea from "@/components/ui/Textarea";
+import LoginToolTip from "@/components/ui/ToolTip";
+import { auth } from "@/lib/auth";
 import { Pet, User } from "@/lib/types";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
+type Session = typeof auth.$Infer.Session;
 interface PetDetailsClientProps {
   pet: Pet & { user: User };
   similarPets: Pet[];
+  session: Session | null;
 }
 
 export default function PetDetailsClient({
   pet,
   similarPets,
+  session,
 }: PetDetailsClientProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -264,17 +269,26 @@ export default function PetDetailsClient({
             }
           />
           <div className="flex gap-3 pt-2">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setIsModalOpen(false)}
-              fullWidth
-            >
-              Cancel
-            </Button>
-            <Button type="submit" fullWidth disabled={isSubmitting}>
-              {isSubmitting ? "Sending..." : "Send Request"}
-            </Button>
+            <div className="flex-1">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setIsModalOpen(false)}
+                fullWidth
+              >
+                Cancel
+              </Button>
+            </div>
+            <div className="flex-1 relative group">
+              <Button
+                type="submit"
+                fullWidth
+                disabled={isSubmitting || !session?.user}
+              >
+                {isSubmitting ? "Sending..." : "Send Request"}
+              </Button>
+              {!session?.user && <LoginToolTip />}
+            </div>
           </div>
         </form>
       </Modal>
