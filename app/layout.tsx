@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
-import { getUserSession } from "./actions/auth";
+import { getUserSession } from "@/database/session";
 
 const inter = Inter({
   variable: "--font-inter",

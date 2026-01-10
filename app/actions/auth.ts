@@ -3,7 +3,6 @@
 import { auth } from "@/lib/auth";
 import { SignInFormData, SignUpFormData } from "@/lib/types";
 import { headers } from "next/headers";
-type Session = typeof auth.$Infer.Session;
 
 export const signUpWithEmailPassword = async (formData: SignUpFormData) => {
   const { name, email, password, confirmPassword } = formData;
@@ -89,11 +88,4 @@ export const logout = async () => {
   return await auth.api.signOut({
     headers: await headers(),
   });
-};
-
-export const getUserSession = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  return session;
 };
