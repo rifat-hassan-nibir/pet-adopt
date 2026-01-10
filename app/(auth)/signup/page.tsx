@@ -1,11 +1,14 @@
 "use client";
 
+import { signUpWithEmailPassword } from "@/app/actions/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,15 +17,28 @@ export default function SignUpPage() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formState, setFormState] = useState({
+    loading: false,
+    error: "",
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+    setFormState({ ...formState, loading: true, error: "" });
+
+    const result = await signUpWithEmailPassword(formData);
+
+    if (result.success) {
+      router.push("/login");
+    } else if (!result.success && result.error) {
+      setFormState({ ...formState, loading: false, error: result.error });
+    } else {
+      setFormState({
+        ...formState,
+        loading: false,
+        error: "An unknown error occurred.",
+      });
     }
-    // UI only - would create account in real app
-    alert("Account created successfully! (Demo only)");
   };
 
   return (
@@ -285,8 +301,14 @@ export default function SignUpPage() {
           </label>
         </div>
 
-        <Button type="submit" fullWidth size="lg">
-          Create Account
+        {/* Error Message */}
+        {formState.error && (
+          <div className="mt-4 text-red-600 text-center">{formState.error}</div>
+        )}
+
+        {/* Submit Button */}
+        <Button disabled={formState.loading} type="submit" fullWidth size="lg">
+          {formState.loading ? "Creating Account..." : "Sign Up"}
         </Button>
       </form>
 

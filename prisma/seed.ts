@@ -14,7 +14,6 @@ async function main() {
       data: {
         name: "Sarah Johnson",
         email: "sarah.johnson@email.com",
-        password: "$2a$10$XQZqHpZxXqZxXqZxXqZxXe", // hashed: password123
         image: "https://i.pravatar.cc/150?img=1",
       },
     }),
@@ -22,7 +21,6 @@ async function main() {
       data: {
         name: "Michael Chen",
         email: "michael.chen@email.com",
-        password: "$2a$10$XQZqHpZxXqZxXqZxXqZxXe",
         image: "https://i.pravatar.cc/150?img=2",
       },
     }),
@@ -30,7 +28,6 @@ async function main() {
       data: {
         name: "Emily Rodriguez",
         email: "emily.rodriguez@email.com",
-        password: "$2a$10$XQZqHpZxXqZxXqZxXqZxXe",
         image: "https://i.pravatar.cc/150?img=3",
       },
     }),
@@ -38,7 +35,6 @@ async function main() {
       data: {
         name: "David Kim",
         email: "david.kim@email.com",
-        password: "$2a$10$XQZqHpZxXqZxXqZxXqZxXe",
         image: "https://i.pravatar.cc/150?img=4",
       },
     }),
@@ -46,7 +42,6 @@ async function main() {
       data: {
         name: "Jessica Williams",
         email: "jessica.williams@email.com",
-        password: "$2a$10$XQZqHpZxXqZxXqZxXqZxXe",
         image: "https://i.pravatar.cc/150?img=5",
       },
     }),

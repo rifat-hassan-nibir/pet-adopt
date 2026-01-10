@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
+import { getUserSession } from "./actions/auth";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,17 +29,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  const session = await getUserSession();
+
   return (
     <html lang="en">
       <body
         className={`${inter.variable} ${poppins.variable} antialiased min-h-screen flex flex-col`}
       >
-        <Navbar />
+        <Navbar session={session} />
         <main id="main-content" className="grow">
           {children}
         </main>

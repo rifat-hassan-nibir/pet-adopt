@@ -13,31 +13,84 @@ datasource db {
   provider = "postgresql"
 }
 
-model User{
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  image String?
+model User {
+  id       String  @id @default(uuid())
+  name     String
+  email    String  @unique
+  image    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  adoptionPosts AdoptionPost[]
+  adoptionPosts    AdoptionPost[]
   adoptionRequests AdoptionRequest[]
+  emailVerified    Boolean           @default(false)
+  sessions         Session[]
+  accounts         Account[]
+
+  @@map("user")
 }
 
-model AdoptionPost{
-  id String @id @default(uuid())
-  name String
-  description String
-  image String
-  category String
-  age String
-  location String
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+
+model AdoptionPost {
+  id              String     @id @default(uuid())
+  name            String
+  description     String
+  image           String
+  category        String
+  age             String
+  location        String
   characteristics String[]
-  status PostStatus @default(AVAILABLE)
+  status          PostStatus @default(AVAILABLE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -46,14 +99,14 @@ model AdoptionPost{
   userId String
 
   // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   adoptionRequests AdoptionRequest[]
 }
 
-model AdoptionRequest{
-  id String @id @default(uuid())
+model AdoptionRequest {
+  id      String                @id @default(uuid())
   message String
-  status AdoptionRequestStatus @default(PENDING)
+  status  AdoptionRequestStatus @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -63,19 +116,21 @@ model AdoptionRequest{
   postId String
 
   // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   post AdoptionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, postId]) // A user can only make one request per post
+  // A user can only make one request per post
+  @@unique([userId, postId])
 }
 
-enum PostStatus{
+enum PostStatus {
   AVAILABLE
   ADOPTED
 }
 
-enum AdoptionRequestStatus{
+enum AdoptionRequestStatus {
   PENDING
   APPROVED
   REJECTED
 }
+

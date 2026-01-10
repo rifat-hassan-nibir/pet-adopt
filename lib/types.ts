@@ -39,3 +39,15 @@ export interface AdoptionCardProps {
   image: string;
   age?: string;
 }
+
+export interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface SignInFormData {
+  email: string;
+  password: string;
+}

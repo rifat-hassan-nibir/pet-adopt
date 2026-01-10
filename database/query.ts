@@ -43,3 +43,10 @@ export const getSimilarPets = async (category: string, petId: string) => {
     take: 4,
   });
 };
+
+// Get user data by user ID
+export const getUserById = async (userId: string) => {
+  return await prisma.user.findUnique({
+    where: { id: userId },
+  });
+};
