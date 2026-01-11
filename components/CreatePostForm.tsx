@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { petTypes } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import Button from "./ui/Button";
 import Input from "./ui/Input";
 import Select from "./ui/Select";
 import Textarea from "./ui/Textarea";
+import LoginToolTip from "./ui/ToolTip";
 
 interface CreatePostFormProps {
   onCancel: () => void;
@@ -18,8 +20,7 @@ export default function CreatePostForm({
   onCancel,
   onSubmit,
 }: CreatePostFormProps) {
-  // Mock authentication state - set to false to show warning banner
-  const isAuthenticated = false;
+  const session = authClient.useSession();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -71,7 +72,7 @@ export default function CreatePostForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Authentication Warning Banner */}
-      {!isAuthenticated && (
+      {!session?.data?.user && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
           {/* Warning Icon */}
           <svg
@@ -268,7 +269,11 @@ export default function CreatePostForm({
           Cancel
         </Button>
         <div className="flex-1 relative group">
-          <Button type="submit" className="w-full" disabled={!isAuthenticated}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={!session?.data?.user}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4 mr-2"
@@ -285,13 +290,8 @@ export default function CreatePostForm({
             </svg>
             Create Post
           </Button>
-          {/* Tooltip for disabled state */}
-          {!isAuthenticated && (
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-              Please log in to create a post
-              <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-            </div>
-          )}
+          {/* LoginToolTip for disabled state */}
+          {!session?.data?.user && <LoginToolTip />}
         </div>
       </div>
     </form>
