@@ -16,7 +16,15 @@ export async function POST(request: NextRequest) {
 
     // Parse request body
     const body = await request.json();
-    const { name, category, age, location, description, image } = body;
+    const {
+      name,
+      category,
+      age,
+      location,
+      description,
+      image,
+      characteristics,
+    } = body;
 
     // Validate required fields
     if (!name || !category || !age || !location || !description || !image) {
@@ -35,7 +43,7 @@ export async function POST(request: NextRequest) {
         location,
         description,
         image,
-        characteristics: [], // You can add this later
+        characteristics,
         userId: session.user.id,
       },
     });

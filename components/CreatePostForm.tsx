@@ -34,7 +34,29 @@ export default function CreatePostForm({
     age: "",
     location: "",
     description: "",
+    characteristics: [] as string[],
   });
+
+  const petCharacteristics = [
+    "Good with kids",
+    "Good with other pets",
+    "Only pet preferred",
+
+    "Friendly",
+    "Calm",
+    "Playful",
+    "Energetic",
+
+    "House-trained",
+    "Basic training",
+    "Low barking",
+    "Not aggressive",
+
+    "Low maintenance",
+    "High maintenance",
+    "Needs grooming",
+    "Heavy shedding",
+  ];
 
   const handleImageChange = (file: File | null) => {
     if (file) {
@@ -57,6 +79,18 @@ export default function CreatePostForm({
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCharacteristicChange = (characteristic: string) => {
+    setFormData((prev) => {
+      const isSelected = prev.characteristics.includes(characteristic);
+      return {
+        ...prev,
+        characteristics: isSelected
+          ? prev.characteristics.filter((c) => c !== characteristic)
+          : [...prev.characteristics, characteristic],
+      };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -101,6 +135,7 @@ export default function CreatePostForm({
         location: formData.location,
         description: formData.description,
         image: imageUrl,
+        characteristics: formData.characteristics,
       };
 
       const response = await fetch("/api/adoption-posts", {
@@ -252,7 +287,7 @@ export default function CreatePostForm({
                   Click to upload
                 </span>
               </p>
-              <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 10MB</p>
+              <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 2MB</p>
             </div>
           )}
           <input
@@ -307,6 +342,30 @@ export default function CreatePostForm({
             setFormData({ ...formData, location: e.target.value })
           }
         />
+      </div>
+
+      {/* Characteristics - Checkboxes */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Characteristics
+        </label>
+        <div className="space-y-2 grid grid-cols-2">
+          {petCharacteristics.map((characteristic) => (
+            <label
+              key={characteristic}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                disabled={isSubmitting}
+                checked={formData.characteristics.includes(characteristic)}
+                onChange={() => handleCharacteristicChange(characteristic)}
+                className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+              />
+              <span className="text-sm text-gray-700">{characteristic}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
       {/* Description */}
