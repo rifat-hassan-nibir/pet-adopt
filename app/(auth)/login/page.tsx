@@ -1,6 +1,6 @@
 "use client";
 
-import { loginWithEmailPassword, loginWithGoogle } from "@/app/actions/auth";
+import { loginWithEmailPassword } from "@/app/actions/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { authClient } from "@/lib/auth-client";
@@ -102,7 +102,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="hover:cursor-pointer absolute right-3 top-[38px] text-gray-400 hover:text-gray-600"
+              className="hover:cursor-pointer absolute right-3 top-9.5 text-gray-400 hover:text-gray-600"
             >
               {showPassword ? (
                 <svg
