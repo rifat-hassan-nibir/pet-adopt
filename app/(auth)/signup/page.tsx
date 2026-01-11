@@ -3,6 +3,7 @@
 import { signUpWithEmailPassword } from "@/app/actions/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -39,6 +40,13 @@ export default function SignUpPage() {
         error: "An unknown error occurred.",
       });
     }
+  };
+
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/profile",
+    });
   };
 
   return (
@@ -325,6 +333,7 @@ export default function SignUpPage() {
       {/* Social Login */}
       <div className="grid grid-cols-1 gap-4">
         <button
+          onClick={handleGoogleLogin}
           type="button"
           className="hover:cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
