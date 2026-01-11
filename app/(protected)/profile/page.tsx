@@ -3,6 +3,7 @@
  */
 "use client";
 
+import CreatePostForm from "@/components/CreatePostForm";
 import ActionButton from "@/components/ui/ActionButton";
 import Avatar from "@/components/ui/Avatar";
 import Button from "@/components/ui/Button";
@@ -21,15 +22,14 @@ import {
   userAdoptionPosts,
 } from "@/lib/data";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("posts");
   const [selectedRequest, setSelectedRequest] =
     useState<AdoptionRequest | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-  // Gap Addressed: No confirmation dialog for delete actions
   const [postToDelete, setPostToDelete] = useState<UserAdoptionPost | null>(
     null
   );
@@ -227,25 +227,23 @@ export default function ProfilePage() {
                   <h3 className="text-lg font-semibold text-gray-900">
                     Your Adoption Posts
                   </h3>
-                  <Link href="/create">
-                    <Button size="sm">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-2"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                      New Post
-                    </Button>
-                  </Link>
+                  <Button onClick={() => setIsCreateModalOpen(true)} size="sm">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                    New Post
+                  </Button>
                 </div>
 
                 {/* Posts Grid */}
@@ -735,6 +733,19 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+      </Modal>
+
+      {/* Modal for create post */}
+      <Modal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        title="Create Adoption Post"
+        size="xl"
+      >
+        <CreatePostForm
+          onCancel={() => setIsCreateModalOpen(false)}
+          onSubmit={() => setIsCreateModalOpen(false)}
+        />
       </Modal>
 
       {/* Delete Confirmation Dialog */}

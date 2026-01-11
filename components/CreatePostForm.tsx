@@ -20,7 +20,7 @@ export default function CreatePostForm({
   onCancel,
   onSubmit,
 }: CreatePostFormProps) {
-  const session = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -72,7 +72,7 @@ export default function CreatePostForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Authentication Warning Banner */}
-      {!session?.data?.user && (
+      {!isPending && !session?.user && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
           {/* Warning Icon */}
           <svg
