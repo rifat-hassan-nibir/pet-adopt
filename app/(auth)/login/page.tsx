@@ -41,6 +41,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
+    setFormState({ ...formState, loading: true, error: "" });
     await authClient.signIn.social({
       provider: "google",
       callbackURL: "/profile",
@@ -180,6 +181,7 @@ export default function LoginPage() {
       <div className="grid grid-cols-1 gap-4">
         <button
           onClick={handleGoogleLogin}
+          disabled={formState?.loading}
           type="button"
           className="hover:cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
@@ -201,7 +203,9 @@ export default function LoginPage() {
               fill="#EA4335"
             />
           </svg>
-          <span className="text-gray-700 font-medium">Google</span>
+          <span className="text-gray-700 font-medium">
+            {formState?.loading ? "Signing in..." : "Google"}
+          </span>
         </button>
       </div>
 
