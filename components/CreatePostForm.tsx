@@ -269,11 +269,7 @@ export default function CreatePostForm({
           Cancel
         </Button>
         <div className="flex-1 relative group">
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!session?.data?.user}
-          >
+          <Button type="submit" className="w-full" disabled={!session?.user}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4 mr-2"
@@ -291,7 +287,7 @@ export default function CreatePostForm({
             Create Post
           </Button>
           {/* LoginToolTip for disabled state */}
-          {!session?.data?.user && <LoginToolTip />}
+          {!session?.user && <LoginToolTip />}
         </div>
       </div>
     </form>
