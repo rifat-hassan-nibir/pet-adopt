@@ -10,6 +10,7 @@ import Input from "./ui/Input";
 import Select from "./ui/Select";
 import Textarea from "./ui/Textarea";
 import LoginToolTip from "./ui/ToolTip";
+import { useRouter } from "next/navigation";
 
 interface CreatePostFormProps {
   onCancel: () => void;
@@ -21,7 +22,7 @@ export default function CreatePostForm({
   onSubmit,
 }: CreatePostFormProps) {
   const { data: session, isPending } = authClient.useSession();
-
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -151,6 +152,9 @@ export default function CreatePostForm({
 
       alert("Post created successfully! 🎉");
       onSubmit?.();
+
+      // Navigate to profile page
+      router.push("/profile");
     } catch (error) {
       console.error("Error creating post:", error);
       alert(
