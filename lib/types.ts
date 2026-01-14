@@ -62,20 +62,18 @@ export interface UserAdoptionPost {
   location: string;
   characteristics: string[];
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }
 
 export interface AdoptionRequest {
   id: string;
-  requesterName: string;
-  requesterEmail: string;
   message: string;
-  petName: string;
-  petId: string;
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  userId: string;
+  postId: string;
 }
 
 export interface ProfileInfo {
