@@ -10,12 +10,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import Modal from "@/components/ui/Modal";
 import StatusBadge from "@/components/ui/StatusBadge";
 import TabNavigation from "@/components/ui/TabNavigation";
-import {
-  adoptionRequests,
-  currentUser,
-  getPendingRequestsCount,
-  userAdoptionPosts,
-} from "@/lib/data";
+import { currentUser } from "@/lib/data";
 import { ProfileInfo, UserAdoptionPost, AdoptionRequest } from "@/lib/types";
 import Image from "next/image";
 import { useState } from "react";
@@ -109,15 +104,15 @@ export default function ProfilePageClient({
                       className="w-24 h-24 rounded-full object-cover ring-4 ring-emerald-50"
                     />
                   ) : (
-                    <Avatar name={profileInfo.name} size="xl" />
+                    <Avatar name={profileInfo?.name} size="xl" />
                   )}
                   <span className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full" />
                 </div>
                 <h2 className="text-xl font-semibold text-gray-900">
-                  {profileInfo.name}
+                  {profileInfo?.name}
                 </h2>
                 <p className="text-gray-500 text-sm mt-1">
-                  {profileInfo.email}
+                  {profileInfo?.email}
                 </p>
               </div>
 
