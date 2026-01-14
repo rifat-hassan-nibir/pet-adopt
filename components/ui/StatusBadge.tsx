@@ -1,5 +1,5 @@
 interface StatusBadgeProps {
-  status: string;
+  status: "AVAILABLE" | "ADOPTED";
   className?: string;
 }
 
