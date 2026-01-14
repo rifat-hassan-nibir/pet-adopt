@@ -50,3 +50,41 @@ export const getUserById = async (userId: string) => {
     where: { id: userId },
   });
 };
+
+// Get user adoption posts by user ID
+export const getUserAdoptionPosts = async (userId: string) => {
+  return await prisma.adoptionPost.findMany({
+    where: { userId: userId },
+  });
+};
+
+// Get profile data
+export const getProfileInfo = async (userId: string) => {
+  console.log("user id ===>>>", userId);
+  return await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+      adoptionPosts: true,
+      adoptionRequests: true,
+    },
+  });
+};
+
+// Get user adoption post by ID
+export const getUserAdoptionPostById = async (id: string) => {
+  return await prisma.adoptionPost.findUnique({
+    where: { id },
+  });
+};
+
+// Update user adoption post by ID
+export const updateUserAdoptionPost = async (id: string, data: any) => {
+  return await prisma.adoptionPost.update({
+    where: { id },
+    data,
+  });
+};

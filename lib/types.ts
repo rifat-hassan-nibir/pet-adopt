@@ -51,3 +51,34 @@ export interface SignInFormData {
   email: string;
   password: string;
 }
+
+export interface UserAdoptionPost {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  category: string;
+  age: string;
+  location: string;
+  characteristics: string[];
+  status: string;
+}
+
+export interface AdoptionRequest {
+  id: string;
+  requesterName: string;
+  requesterEmail: string;
+  message: string;
+  petName: string;
+  petId: string;
+  status: string;
+}
+
+export interface ProfileInfo {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  adoptionPosts: UserAdoptionPost[] | null;
+  adoptionRequests: AdoptionRequest[] | null;
+}
