@@ -1,15 +1,14 @@
 import { getProfileInfo } from "@/database/query";
 import ProfilePageClient from "./ProfilePageClient";
 import { getUserSession } from "@/database/session";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await getUserSession();
   if (!session?.user?.id) {
-    return <div className="text-center text-2xl">Not logged in</div>;
+    return redirect("/login");
   }
   const profileInfo = await getProfileInfo(session.user.id);
-
-  console.log("profile info ====>>>>", profileInfo);
 
   return (
     <div className="min-h-screen bg-gray-50">
