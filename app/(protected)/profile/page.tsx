@@ -8,6 +8,7 @@ export default async function ProfilePage() {
     return <div className="text-center text-2xl">Not logged in</div>;
   }
   const profileInfo = await getProfileInfo(session.user.id);
+
   console.log("profile info ====>>>>", profileInfo);
 
   return (

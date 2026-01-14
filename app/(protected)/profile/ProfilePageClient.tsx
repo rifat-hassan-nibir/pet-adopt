@@ -85,7 +85,7 @@ export default function ProfilePageClient({
     {
       id: "posts",
       label: "My Adoption Posts",
-      count: userAdoptionPosts.length,
+      count: profileInfo?.adoptionPosts?.length,
     },
     { id: "requests", label: "Adoption Requests", count: pendingCount },
   ];
@@ -125,14 +125,14 @@ export default function ProfilePageClient({
               <div className="grid grid-cols-3 gap-4 py-6 border-b border-gray-100">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {profileInfo.adoptionPosts.length}
+                    {profileInfo?.adoptionPosts?.length}
                   </div>
                   <div className="text-xs text-gray-500">Posts</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
                     {
-                      profileInfo.adoptionPosts.filter(
+                      profileInfo?.adoptionPosts?.filter(
                         (p: UserAdoptionPost) => p.status === "ADOPTED"
                       ).length
                     }
@@ -214,15 +214,15 @@ export default function ProfilePageClient({
                 </div>
 
                 {/* Posts Grid */}
-                {userAdoptionPosts.length > 0 ? (
+                {profileInfo?.adoptionPosts?.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {userAdoptionPosts.map((post) => (
+                    {profileInfo?.adoptionPosts?.map((post) => (
                       <DashboardCard key={post.id} padding="none">
                         {/* Post Image */}
                         <div className="relative h-40 overflow-hidden rounded-t-xl">
                           <Image
                             src={post.image}
-                            alt={post.petName}
+                            alt={post.name}
                             fill
                             className="object-cover"
                           />
@@ -236,62 +236,20 @@ export default function ProfilePageClient({
                           <div className="flex items-start justify-between mb-2">
                             <div>
                               <h4 className="font-semibold text-gray-900">
-                                {post.petName}
+                                {post.name}
                               </h4>
-                              <p className="text-sm text-gray-500">
-                                {post.petType} • {post.location}
+                              <p className="text-xs text-gray-500">
+                                Category: {post.category} • Location:{" "}
+                                {post.location}
                               </p>
                             </div>
-                          </div>
-
-                          {/* Stats Row */}
-                          <div className="flex items-center gap-4 text-xs text-gray-500 mb-4">
-                            <span className="flex items-center gap-1">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                />
-                              </svg>
-                              {post.views} views
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                />
-                              </svg>
-                              {post.inquiries} inquiries
-                            </span>
                           </div>
 
                           {/* Action Buttons */}
                           <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                             <span className="text-xs text-gray-400">
-                              {post.createdAt}
+                              Posted On:{" "}
+                              {new Date(post.createdAt).toLocaleDateString()}
                             </span>
                             <div className="flex items-center gap-1">
                               {" "}
@@ -372,9 +330,9 @@ export default function ProfilePageClient({
                   Incoming Adoption Requests
                 </h3>
 
-                {adoptionRequests.length > 0 ? (
+                {profileInfo?.adoptionRequests?.length > 0 ? (
                   <div className="space-y-4">
-                    {adoptionRequests.map((request) => (
+                    {profileInfo?.adoptionRequests?.map((request) => (
                       <DashboardCard key={request.id}>
                         <div className="flex flex-col sm:flex-row gap-4">
                           {/* Requester Info */}

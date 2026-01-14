@@ -62,6 +62,8 @@ export interface UserAdoptionPost {
   location: string;
   characteristics: string[];
   status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AdoptionRequest {
@@ -72,6 +74,8 @@ export interface AdoptionRequest {
   petName: string;
   petId: string;
   status: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProfileInfo {
