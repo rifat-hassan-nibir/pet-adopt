@@ -1,4 +1,4 @@
-import { getProfileInfo } from "@/database/query";
+import { getProfileInfo, getUserAdoptionPosts } from "@/database/query";
 import ProfilePageClient from "./ProfilePageClient";
 import { getUserSession } from "@/database/session";
 import { redirect } from "next/navigation";
@@ -9,6 +9,7 @@ export default async function ProfilePage() {
     return redirect("/login");
   }
   const profileInfo = await getProfileInfo(session.user.id);
+  const adoptionPosts = await getUserAdoptionPosts(session.user.id);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -25,7 +26,10 @@ export default async function ProfilePage() {
       </div>
 
       {/* Dashboard Content */}
-      <ProfilePageClient profileInfo={profileInfo} />
+      <ProfilePageClient
+        profileInfo={profileInfo}
+        adoptionPosts={adoptionPosts}
+      />
     </div>
   );
 }

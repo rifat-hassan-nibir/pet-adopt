@@ -81,6 +81,4 @@ export interface ProfileInfo {
   name: string;
   email: string;
   image: string | null;
-  adoptionPosts: UserAdoptionPost[] | null;
-  adoptionRequests: AdoptionRequest[] | null;
 }

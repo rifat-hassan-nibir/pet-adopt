@@ -60,7 +60,6 @@ export const getUserAdoptionPosts = async (userId: string) => {
 
 // Get profile data
 export const getProfileInfo = async (userId: string) => {
-  console.log("user id ===>>>", userId);
   return await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -68,8 +67,6 @@ export const getProfileInfo = async (userId: string) => {
       name: true,
       email: true,
       image: true,
-      adoptionPosts: true,
-      adoptionRequests: true,
     },
   });
 };

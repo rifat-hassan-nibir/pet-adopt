@@ -17,8 +17,10 @@ import { useState } from "react";
 
 export default function ProfilePageClient({
   profileInfo,
+  adoptionPosts,
 }: {
   profileInfo: ProfileInfo;
+  adoptionPosts: UserAdoptionPost[];
 }) {
   const [activeTab, setActiveTab] = useState("posts");
   const [selectedRequest, setSelectedRequest] =
@@ -29,10 +31,12 @@ export default function ProfilePageClient({
     null
   );
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const pendingCount =
-    profileInfo?.adoptionRequests?.filter(
-      (p: AdoptionRequest) => p.status === "PENDING"
-    ).length || 0;
+
+  // Count pending requests received (on my posts)
+  const receivedRequestCount = 5;
+
+  // Count pending requests sent (I made)
+  const sentRequestCount = 5;
 
   const handleViewRequest = (request: AdoptionRequest) => {
     setSelectedRequest(request);
@@ -45,16 +49,15 @@ export default function ProfilePageClient({
   };
 
   const handleApprove = () => {
-    // UI only - would update request status in real app
     alert(
-      `Request from ${selectedRequest?.requesterName} approved! (Demo only)`
+      `Request from ${selectedRequest?.requester?.name} approved! (Demo only)`
     );
     handleCloseModal();
   };
+
   const handleReject = () => {
-    // UI only - would update request status in real app
     alert(
-      `Request from ${selectedRequest?.requesterName} rejected! (Demo only)`
+      `Request from ${selectedRequest?.requester?.name} rejected! (Demo only)`
     );
     handleCloseModal();
   };
@@ -65,7 +68,6 @@ export default function ProfilePageClient({
   };
 
   const handleConfirmDelete = () => {
-    // UI only - would delete post in real app
     alert(`Post "${postToDelete?.petName}" deleted! (Demo only)`);
     setIsDeleteDialogOpen(false);
     setPostToDelete(null);
@@ -80,9 +82,18 @@ export default function ProfilePageClient({
     {
       id: "posts",
       label: "My Adoption Posts",
-      count: profileInfo?.adoptionPosts?.length,
+      count: adoptionPosts?.length,
     },
-    { id: "requests", label: "Adoption Requests", count: pendingCount },
+    {
+      id: "requests_received",
+      label: "Requests Received",
+      count: 5,
+    },
+    {
+      id: "requests_sent",
+      label: "Requests Sent",
+      count: 0,
+    },
   ];
 
   return (
@@ -120,7 +131,7 @@ export default function ProfilePageClient({
               <div className="grid grid-cols-3 gap-4 py-6 border-b border-gray-100">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {profileInfo?.adoptionPosts?.length}
+                    {adoptionPosts?.length}
                   </div>
                   <div className="text-xs text-gray-500">Posts</div>
                 </div>
@@ -136,7 +147,7 @@ export default function ProfilePageClient({
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {pendingCount}
+                    {receivedRequestCount}
                   </div>
                   <div className="text-xs text-gray-500">Requests</div>
                 </div>
@@ -209,9 +220,9 @@ export default function ProfilePageClient({
                 </div>
 
                 {/* Posts Grid */}
-                {profileInfo?.adoptionPosts?.length > 0 ? (
+                {adoptionPosts?.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {profileInfo?.adoptionPosts?.map((post) => (
+                    {adoptionPosts?.map((post) => (
                       <DashboardCard key={post.id} padding="none">
                         {/* Post Image */}
                         <div className="relative h-40 overflow-hidden rounded-t-xl">
@@ -222,7 +233,9 @@ export default function ProfilePageClient({
                             className="object-cover"
                           />
                           <div className="absolute top-2 right-2">
-                            <StatusBadge status={post.status} />
+                            <StatusBadge
+                              status={post.status as "ADOPTED" | "AVAILABLE"}
+                            />
                           </div>
                         </div>
 
@@ -247,7 +260,6 @@ export default function ProfilePageClient({
                               {new Date(post.createdAt).toLocaleDateString()}
                             </span>
                             <div className="flex items-center gap-1">
-                              {" "}
                               <ActionButton variant="default" title="Edit post">
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -319,30 +331,31 @@ export default function ProfilePageClient({
               </div>
             )}
 
-            {activeTab === "requests" && (
+            {/* Received Adoption Requests */}
+            {activeTab === "requests_received" && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Incoming Adoption Requests
+                  Requests on Your Posts
                 </h3>
 
-                {profileInfo?.adoptionRequests?.length > 0 ? (
+                {profileInfo?.requestsReceived?.length > 0 ? (
                   <div className="space-y-4">
-                    {profileInfo?.adoptionRequests?.map((request) => (
+                    {profileInfo?.requestsReceived?.map((request) => (
                       <DashboardCard key={request.id}>
                         <div className="flex flex-col sm:flex-row gap-4">
                           {/* Requester Info */}
                           <div className="flex items-start gap-3 flex-1">
-                            {request.requesterAvatar ? (
+                            {request.requester?.image ? (
                               <Image
-                                src={request.requesterAvatar}
-                                alt={request.requesterName}
+                                src={request.requester.image}
+                                alt={request.requester.name}
                                 width={48}
                                 height={48}
                                 className="w-12 h-12 rounded-full object-cover shrink-0"
                               />
                             ) : (
                               <Avatar
-                                name={request.requesterName}
+                                name={request.requester?.name || "Unknown"}
                                 size="lg"
                                 className="shrink-0"
                               />
@@ -350,33 +363,40 @@ export default function ProfilePageClient({
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 flex-wrap">
                                 <h4 className="font-semibold text-gray-900">
-                                  {request.requesterName}
+                                  {request.requester?.name}
                                 </h4>
-                                {request.status === "approved" && (
+                                {request.status === "PENDING" && (
+                                  <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+                                    Pending
+                                  </span>
+                                )}
+                                {request.status === "APPROVED" && (
                                   <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
                                     Approved
                                   </span>
                                 )}
-                                {request.status === "rejected" && (
+                                {request.status === "REJECTED" && (
                                   <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-medium">
                                     Rejected
                                   </span>
                                 )}
                               </div>
                               <p className="text-sm text-gray-500">
-                                {request.requesterEmail}
+                                {request.requester?.email}
                               </p>
                               <div className="mt-2 flex items-center gap-2 text-sm">
                                 <span className="text-gray-400">For:</span>
                                 <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                                  {request.petName}
+                                  {request.post?.name}
                                 </span>
                               </div>
                               <p className="mt-3 text-sm text-gray-600 line-clamp-2">
                                 {request.message}
                               </p>
                               <p className="mt-2 text-xs text-gray-400">
-                                {request.createdAt}
+                                {new Date(
+                                  request.createdAt
+                                ).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
@@ -411,7 +431,7 @@ export default function ProfilePageClient({
                               </svg>
                               View
                             </Button>
-                            {request.status === "pending" && (
+                            {request.status === "PENDING" && (
                               <>
                                 <Button
                                   size="sm"
@@ -476,10 +496,152 @@ export default function ProfilePageClient({
                           />
                         </svg>
                       }
-                      title="No adoption requests yet"
+                      title="No requests received yet"
                       description="When someone is interested in adopting one of your pets, their request will appear here."
                       actionLabel="View Your Posts"
                       onAction={() => setActiveTab("posts")}
+                    />
+                  </DashboardCard>
+                )}
+              </div>
+            )}
+
+            {/* Sent Adoption Requests */}
+            {activeTab === "requests_sent" && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Requests You've Sent
+                </h3>
+
+                {profileInfo?.requestsSent?.length > 0 ? (
+                  <div className="space-y-4">
+                    {profileInfo?.requestsSent?.map((request) => (
+                      <DashboardCard key={request.id}>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          {/* Post Info */}
+                          <div className="flex items-start gap-3 flex-1">
+                            {request.post?.image && (
+                              <Image
+                                src={request.post.image}
+                                alt={request.post.name}
+                                width={48}
+                                height={48}
+                                className="w-12 h-12 rounded-lg object-cover shrink-0"
+                              />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="font-semibold text-gray-900">
+                                  {request.post?.name}
+                                </h4>
+                                {request.status === "PENDING" && (
+                                  <span className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+                                    Pending
+                                  </span>
+                                )}
+                                {request.status === "APPROVED" && (
+                                  <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
+                                    Approved
+                                  </span>
+                                )}
+                                {request.status === "REJECTED" && (
+                                  <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                                    Rejected
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-500">
+                                Owner: {request.post?.user?.name}
+                              </p>
+                              <p className="mt-3 text-sm text-gray-600 line-clamp-2">
+                                {request.message}
+                              </p>
+                              <p className="mt-2 text-xs text-gray-400">
+                                Sent on{" "}
+                                {new Date(
+                                  request.createdAt
+                                ).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex sm:flex-col gap-2 sm:justify-start shrink-0">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="flex-1 sm:flex-none"
+                              onClick={() => handleViewRequest(request)}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4 mr-1"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                />
+                              </svg>
+                              View
+                            </Button>
+                            {request.status === "PENDING" && (
+                              <button className="hover:cursor-pointer flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors inline-flex items-center justify-center">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-4 w-4 mr-1"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                                Cancel
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </DashboardCard>
+                    ))}
+                  </div>
+                ) : (
+                  <DashboardCard>
+                    <EmptyState
+                      icon={
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-8 w-8 text-gray-400"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
+                        </svg>
+                      }
+                      title="No requests sent yet"
+                      description="Browse available pets and send an adoption request to their owners."
+                      actionLabel="Browse Pets"
+                      actionHref="/"
                     />
                   </DashboardCard>
                 )}
@@ -500,39 +662,42 @@ export default function ProfilePageClient({
           <div className="space-y-6">
             {/* Requester Info Section */}
             <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
-              {selectedRequest.requesterAvatar ? (
+              {selectedRequest.requester?.image ? (
                 <Image
-                  src={selectedRequest.requesterAvatar}
-                  alt={selectedRequest.requesterName}
+                  src={selectedRequest.requester.image}
+                  alt={selectedRequest.requester.name}
                   width={64}
                   height={64}
                   className="w-16 h-16 rounded-full object-cover ring-2 ring-white shadow-sm"
                 />
               ) : (
-                <Avatar name={selectedRequest.requesterName} size="xl" />
+                <Avatar
+                  name={selectedRequest.requester?.name || "Unknown"}
+                  size="xl"
+                />
               )}
               <div className="flex-1 min-w-0">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  {selectedRequest.requesterName}
+                  {selectedRequest.requester?.name}
                 </h3>
                 <a
-                  href={`mailto:${selectedRequest.requesterEmail}`}
+                  href={`mailto:${selectedRequest.requester?.email}`}
                   className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors"
                 >
-                  {selectedRequest.requesterEmail}
+                  {selectedRequest.requester?.email}
                 </a>
                 <div className="mt-2 flex items-center gap-2">
-                  {selectedRequest.status === "pending" && (
+                  {selectedRequest.status === "PENDING" && (
                     <span className="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
                       Pending Review
                     </span>
                   )}
-                  {selectedRequest.status === "approved" && (
+                  {selectedRequest.status === "APPROVED" && (
                     <span className="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
                       Approved
                     </span>
                   )}
-                  {selectedRequest.status === "rejected" && (
+                  {selectedRequest.status === "REJECTED" && (
                     <span className="px-2.5 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
                       Rejected
                     </span>
@@ -564,7 +729,7 @@ export default function ProfilePageClient({
                   Interested in adopting
                 </p>
                 <p className="text-lg font-semibold text-emerald-900">
-                  {selectedRequest.petName}
+                  {selectedRequest.post?.name}
                 </p>
               </div>
             </div>
@@ -597,7 +762,10 @@ export default function ProfilePageClient({
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <span>Request submitted on {selectedRequest.createdAt}</span>
+              <span>
+                Request submitted on{" "}
+                {new Date(selectedRequest.createdAt).toLocaleDateString()}
+              </span>
             </div>
 
             {/* Action Buttons */}
@@ -609,7 +777,7 @@ export default function ProfilePageClient({
               >
                 Close
               </Button>
-              {selectedRequest.status === "pending" && (
+              {selectedRequest.status === "PENDING" && (
                 <>
                   <button
                     onClick={handleReject}
@@ -649,7 +817,7 @@ export default function ProfilePageClient({
                     Approve Request
                   </Button>
                 </>
-              )}{" "}
+              )}
             </div>
           </div>
         )}
