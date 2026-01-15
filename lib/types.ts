@@ -91,8 +91,8 @@ export interface AdoptionRequest {
   updatedAt: Date;
   requesterId: string;
   postId: string;
-  requester?: User;
-  post?: AdoptionPost & { user?: User };
+  requester?: Partial<User>;
+  post?: Partial<AdoptionPost> & { user?: Partial<User> };
 }
 
 export interface ProfileInfo {
