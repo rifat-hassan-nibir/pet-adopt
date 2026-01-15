@@ -516,7 +516,7 @@ export default function ProfilePageClient({
                             {request.post?.image && (
                               <Image
                                 src={request.post.image}
-                                alt={request.post.name}
+                                alt={request.post.name || "Pet"}
                                 width={48}
                                 height={48}
                                 className="w-12 h-12 rounded-lg object-cover shrink-0"
@@ -652,7 +652,7 @@ export default function ProfilePageClient({
               {selectedRequest.requester?.image ? (
                 <Image
                   src={selectedRequest.requester.image}
-                  alt={selectedRequest.requester.name}
+                  alt={selectedRequest.requester.name || "Unknown"}
                   width={64}
                   height={64}
                   className="w-16 h-16 rounded-full object-cover ring-2 ring-white shadow-sm"
