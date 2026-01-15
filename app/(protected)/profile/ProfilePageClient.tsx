@@ -10,33 +10,34 @@ import EmptyState from "@/components/ui/EmptyState";
 import Modal from "@/components/ui/Modal";
 import StatusBadge from "@/components/ui/StatusBadge";
 import TabNavigation from "@/components/ui/TabNavigation";
-import { currentUser } from "@/lib/data";
-import { ProfileInfo, UserAdoptionPost, AdoptionRequest } from "@/lib/types";
+import { AdoptionPost, AdoptionRequest, ProfileInfo } from "@/lib/types";
 import Image from "next/image";
 import { useState } from "react";
 
 export default function ProfilePageClient({
   profileInfo,
   adoptionPosts,
+  adoptionRequestsSent,
+  adoptionRequestsReceived,
 }: {
-  profileInfo: ProfileInfo;
-  adoptionPosts: UserAdoptionPost[];
+  profileInfo: ProfileInfo | null;
+  adoptionPosts: AdoptionPost[];
+  adoptionRequestsSent: AdoptionRequest[];
+  adoptionRequestsReceived: AdoptionRequest[];
 }) {
   const [activeTab, setActiveTab] = useState("posts");
   const [selectedRequest, setSelectedRequest] =
     useState<AdoptionRequest | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-  const [postToDelete, setPostToDelete] = useState<UserAdoptionPost | null>(
-    null
-  );
+  const [postToDelete, setPostToDelete] = useState<AdoptionPost | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  // Count pending requests received (on my posts)
-  const receivedRequestCount = 5;
-
-  // Count pending requests sent (I made)
-  const sentRequestCount = 5;
+  // Calculate counts
+  const adoptedCount =
+    adoptionPosts?.filter((p) => p.status === "ADOPTED").length || 0;
+  const pendingReceivedCount =
+    adoptionRequestsReceived?.filter((r) => r.status === "PENDING").length || 0;
 
   const handleViewRequest = (request: AdoptionRequest) => {
     setSelectedRequest(request);
@@ -62,13 +63,13 @@ export default function ProfilePageClient({
     handleCloseModal();
   };
 
-  const handleDeleteClick = (post: UserAdoptionPost) => {
+  const handleDeleteClick = (post: AdoptionPost) => {
     setPostToDelete(post);
     setIsDeleteDialogOpen(true);
   };
 
   const handleConfirmDelete = () => {
-    alert(`Post "${postToDelete?.petName}" deleted! (Demo only)`);
+    alert(`Post "${postToDelete?.name}" deleted! (Demo only)`);
     setIsDeleteDialogOpen(false);
     setPostToDelete(null);
   };
@@ -82,19 +83,27 @@ export default function ProfilePageClient({
     {
       id: "posts",
       label: "My Adoption Posts",
-      count: adoptionPosts?.length,
+      count: adoptionPosts?.length || 0,
     },
     {
       id: "requests_received",
       label: "Requests Received",
-      count: 5,
+      count: adoptionRequestsReceived?.length || 0,
     },
     {
       id: "requests_sent",
       label: "Requests Sent",
-      count: 0,
+      count: adoptionRequestsSent?.length || 0,
     },
   ];
+
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -108,14 +117,14 @@ export default function ProfilePageClient({
                 <div className="relative inline-block mb-4">
                   {profileInfo?.image ? (
                     <Image
-                      src={profileInfo?.image}
-                      alt={profileInfo?.name}
+                      src={profileInfo.image}
+                      alt={profileInfo.name}
                       width={96}
                       height={96}
                       className="w-24 h-24 rounded-full object-cover ring-4 ring-emerald-50"
                     />
                   ) : (
-                    <Avatar name={profileInfo?.name} size="xl" />
+                    <Avatar name={profileInfo?.name || "User"} size="xl" />
                   )}
                   <span className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full" />
                 </div>
@@ -131,23 +140,19 @@ export default function ProfilePageClient({
               <div className="grid grid-cols-3 gap-4 py-6 border-b border-gray-100">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {adoptionPosts?.length}
+                    {adoptionPosts?.length || 0}
                   </div>
                   <div className="text-xs text-gray-500">Posts</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {
-                      profileInfo?.adoptionPosts?.filter(
-                        (p: UserAdoptionPost) => p.status === "ADOPTED"
-                      ).length
-                    }
+                    {adoptedCount}
                   </div>
                   <div className="text-xs text-gray-500">Adopted</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {receivedRequestCount}
+                    {pendingReceivedCount}
                   </div>
                   <div className="text-xs text-gray-500">Requests</div>
                 </div>
@@ -156,7 +161,10 @@ export default function ProfilePageClient({
               {/* Member Since */}
               <div className="pt-6 pb-2">
                 <p className="text-xs text-gray-400 text-center">
-                  Member since {currentUser.joinedDate}
+                  Member since{" "}
+                  {profileInfo?.createdAt
+                    ? formatDate(profileInfo.createdAt)
+                    : "Recently"}
                 </p>
               </div>
 
@@ -192,10 +200,9 @@ export default function ProfilePageClient({
               />
             </DashboardCard>
 
-            {/* Tab Content */}
+            {/* Tab Content - Posts */}
             {activeTab === "posts" && (
               <div className="space-y-4">
-                {/* Quick Actions */}
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-900">
                     Your Adoption Posts
@@ -219,12 +226,10 @@ export default function ProfilePageClient({
                   </Button>
                 </div>
 
-                {/* Posts Grid */}
-                {adoptionPosts?.length > 0 ? (
+                {adoptionPosts && adoptionPosts.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {adoptionPosts?.map((post) => (
+                    {adoptionPosts.map((post) => (
                       <DashboardCard key={post.id} padding="none">
-                        {/* Post Image */}
                         <div className="relative h-40 overflow-hidden rounded-t-xl">
                           <Image
                             src={post.image}
@@ -233,13 +238,9 @@ export default function ProfilePageClient({
                             className="object-cover"
                           />
                           <div className="absolute top-2 right-2">
-                            <StatusBadge
-                              status={post.status as "ADOPTED" | "AVAILABLE"}
-                            />
+                            <StatusBadge status={post.status} />
                           </div>
                         </div>
-
-                        {/* Post Content */}
                         <div className="p-4">
                           <div className="flex items-start justify-between mb-2">
                             <div>
@@ -252,12 +253,9 @@ export default function ProfilePageClient({
                               </p>
                             </div>
                           </div>
-
-                          {/* Action Buttons */}
                           <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                             <span className="text-xs text-gray-400">
-                              Posted On:{" "}
-                              {new Date(post.createdAt).toLocaleDateString()}
+                              Posted On: {formatDate(post.createdAt)}
                             </span>
                             <div className="flex items-center gap-1">
                               <ActionButton variant="default" title="Edit post">
@@ -331,19 +329,19 @@ export default function ProfilePageClient({
               </div>
             )}
 
-            {/* Received Adoption Requests */}
+            {/* Tab Content - Requests Received */}
             {activeTab === "requests_received" && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900">
                   Requests on Your Posts
                 </h3>
 
-                {profileInfo?.requestsReceived?.length > 0 ? (
+                {adoptionRequestsReceived &&
+                adoptionRequestsReceived.length > 0 ? (
                   <div className="space-y-4">
-                    {profileInfo?.requestsReceived?.map((request) => (
+                    {adoptionRequestsReceived.map((request) => (
                       <DashboardCard key={request.id}>
                         <div className="flex flex-col sm:flex-row gap-4">
-                          {/* Requester Info */}
                           <div className="flex items-start gap-3 flex-1">
                             {request.requester?.image ? (
                               <Image
@@ -394,14 +392,10 @@ export default function ProfilePageClient({
                                 {request.message}
                               </p>
                               <p className="mt-2 text-xs text-gray-400">
-                                {new Date(
-                                  request.createdAt
-                                ).toLocaleDateString()}
+                                {formatDate(request.createdAt)}
                               </p>
                             </div>
                           </div>
-
-                          {/* Action Buttons */}
                           <div className="flex sm:flex-col gap-2 sm:justify-start shrink-0">
                             <Button
                               variant="secondary"
@@ -506,19 +500,18 @@ export default function ProfilePageClient({
               </div>
             )}
 
-            {/* Sent Adoption Requests */}
+            {/* Tab Content - Requests Sent */}
             {activeTab === "requests_sent" && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900">
                   Requests You've Sent
                 </h3>
 
-                {profileInfo?.requestsSent?.length > 0 ? (
+                {adoptionRequestsSent && adoptionRequestsSent.length > 0 ? (
                   <div className="space-y-4">
-                    {profileInfo?.requestsSent?.map((request) => (
+                    {adoptionRequestsSent.map((request) => (
                       <DashboardCard key={request.id}>
                         <div className="flex flex-col sm:flex-row gap-4">
-                          {/* Post Info */}
                           <div className="flex items-start gap-3 flex-1">
                             {request.post?.image && (
                               <Image
@@ -557,15 +550,10 @@ export default function ProfilePageClient({
                                 {request.message}
                               </p>
                               <p className="mt-2 text-xs text-gray-400">
-                                Sent on{" "}
-                                {new Date(
-                                  request.createdAt
-                                ).toLocaleDateString()}
+                                Sent on {formatDate(request.createdAt)}
                               </p>
                             </div>
                           </div>
-
-                          {/* Action Buttons */}
                           <div className="flex sm:flex-col gap-2 sm:justify-start shrink-0">
                             <Button
                               variant="secondary"
@@ -660,7 +648,6 @@ export default function ProfilePageClient({
       >
         {selectedRequest && (
           <div className="space-y-6">
-            {/* Requester Info Section */}
             <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
               {selectedRequest.requester?.image ? (
                 <Image
@@ -706,7 +693,6 @@ export default function ProfilePageClient({
               </div>
             </div>
 
-            {/* Pet Info */}
             <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-xl">
               <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
                 <svg
@@ -734,7 +720,6 @@ export default function ProfilePageClient({
               </div>
             </div>
 
-            {/* Message Section */}
             <div>
               <h4 className="text-sm font-medium text-gray-500 mb-2">
                 Message from Requester
@@ -746,7 +731,6 @@ export default function ProfilePageClient({
               </div>
             </div>
 
-            {/* Request Date */}
             <div className="flex items-center gap-2 text-sm text-gray-500">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -763,12 +747,10 @@ export default function ProfilePageClient({
                 />
               </svg>
               <span>
-                Request submitted on{" "}
-                {new Date(selectedRequest.createdAt).toLocaleDateString()}
+                Request submitted on {formatDate(selectedRequest.createdAt)}
               </span>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t border-gray-100">
               <Button
                 variant="secondary"
@@ -845,7 +827,7 @@ export default function ProfilePageClient({
         message={
           <p>
             Are you sure you want to delete the post for{" "}
-            <span className="font-semibold">{postToDelete?.petName}</span>? This
+            <span className="font-semibold">{postToDelete?.name}</span>? This
             action cannot be undone.
           </p>
         }

@@ -55,10 +55,62 @@ export const getUserById = async (userId: string) => {
 export const getUserAdoptionPosts = async (userId: string) => {
   return await prisma.adoptionPost.findMany({
     where: { userId: userId },
+    orderBy: { createdAt: "desc" },
   });
 };
 
-// Get profile data
+// Get adoption requests sent by a user
+export const getAdoptionRequestsSent = async (userId: string) => {
+  return await prisma.adoptionRequest.findMany({
+    where: { requesterId: userId },
+    include: {
+      post: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+};
+
+// Get adoption requests received on user's posts
+export const getAdoptionRequestsReceived = async (userId: string) => {
+  return await prisma.adoptionRequest.findMany({
+    where: {
+      post: {
+        userId: userId,
+      },
+    },
+    include: {
+      requester: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+      post: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+};
+
+// Get profile data with related info
 export const getProfileInfo = async (userId: string) => {
   return await prisma.user.findUnique({
     where: { id: userId },
@@ -67,14 +119,8 @@ export const getProfileInfo = async (userId: string) => {
       name: true,
       email: true,
       image: true,
+      createdAt: true,
     },
-  });
-};
-
-// Get user adoption post by ID
-export const getUserAdoptionPostById = async (id: string) => {
-  return await prisma.adoptionPost.findUnique({
-    where: { id },
   });
 };
 
