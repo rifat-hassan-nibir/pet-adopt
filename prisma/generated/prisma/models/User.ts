@@ -270,7 +270,7 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   emailVerified?: boolean
   adoptionPosts?: Prisma.AdoptionPostCreateNestedManyWithoutUserInput
-  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutRequesterInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
 }
@@ -284,7 +284,7 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   emailVerified?: boolean
   adoptionPosts?: Prisma.AdoptionPostUncheckedCreateNestedManyWithoutUserInput
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutRequesterInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
 }
@@ -298,7 +298,7 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adoptionPosts?: Prisma.AdoptionPostUpdateManyWithoutUserNestedInput
-  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutRequesterNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
 }
@@ -312,7 +312,7 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adoptionPosts?: Prisma.AdoptionPostUncheckedUpdateManyWithoutUserNestedInput
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutRequesterNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -463,7 +463,7 @@ export type UserCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   emailVerified?: boolean
   adoptionPosts?: Prisma.AdoptionPostCreateNestedManyWithoutUserInput
-  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutRequesterInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
 }
 
@@ -476,7 +476,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   emailVerified?: boolean
   adoptionPosts?: Prisma.AdoptionPostUncheckedCreateNestedManyWithoutUserInput
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutRequesterInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -505,7 +505,7 @@ export type UserUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adoptionPosts?: Prisma.AdoptionPostUpdateManyWithoutUserNestedInput
-  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutRequesterNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
 }
 
@@ -518,7 +518,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adoptionPosts?: Prisma.AdoptionPostUncheckedUpdateManyWithoutUserNestedInput
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutRequesterNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -531,7 +531,7 @@ export type UserCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   emailVerified?: boolean
   adoptionPosts?: Prisma.AdoptionPostCreateNestedManyWithoutUserInput
-  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutRequesterInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
 }
 
@@ -544,7 +544,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   updatedAt?: Date | string
   emailVerified?: boolean
   adoptionPosts?: Prisma.AdoptionPostUncheckedCreateNestedManyWithoutUserInput
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutRequesterInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -573,7 +573,7 @@ export type UserUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adoptionPosts?: Prisma.AdoptionPostUpdateManyWithoutUserNestedInput
-  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutRequesterNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
 }
 
@@ -586,7 +586,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   adoptionPosts?: Prisma.AdoptionPostUncheckedUpdateManyWithoutUserNestedInput
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutRequesterNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -598,7 +598,7 @@ export type UserCreateWithoutAdoptionPostsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   emailVerified?: boolean
-  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestCreateNestedManyWithoutRequesterInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
 }
@@ -611,7 +611,7 @@ export type UserUncheckedCreateWithoutAdoptionPostsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   emailVerified?: boolean
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutUserInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedCreateNestedManyWithoutRequesterInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
 }
@@ -640,7 +640,7 @@ export type UserUpdateWithoutAdoptionPostsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUpdateManyWithoutRequesterNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
 }
@@ -653,7 +653,7 @@ export type UserUncheckedUpdateWithoutAdoptionPostsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutUserNestedInput
+  adoptionRequests?: Prisma.AdoptionRequestUncheckedUpdateManyWithoutRequesterNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
 }

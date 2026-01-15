@@ -14,17 +14,17 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  name     String
-  email    String  @unique
-  image    String?
+  id    String  @id @default(uuid())
+  name  String
+  email String  @unique
+  image String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
   adoptionPosts    AdoptionPost[]
-  adoptionRequests AdoptionRequest[]
+  adoptionRequests AdoptionRequest[] // Requests this user sent
   emailVerified    Boolean           @default(false)
   sessions         Session[]
   accounts         Account[]
@@ -80,7 +80,6 @@ model Verification {
   @@map("verification")
 }
 
-
 model AdoptionPost {
   id              String     @id @default(uuid())
   name            String
@@ -112,15 +111,15 @@ model AdoptionRequest {
   updatedAt DateTime @updatedAt
 
   // Foreign Keys
-  userId String
-  postId String
+  requesterId String // User who wants to adopt
+  postId      String // Post they're requesting
 
   // Relations
-  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post AdoptionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  requester User         @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  post      AdoptionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   // A user can only make one request per post
-  @@unique([userId, postId])
+  @@unique([requesterId, postId])
 }
 
 enum PostStatus {
@@ -133,4 +132,3 @@ enum AdoptionRequestStatus {
   APPROVED
   REJECTED
 }
-

@@ -30,7 +30,7 @@ export type AdoptionRequestMinAggregateOutputType = {
   status: $Enums.AdoptionRequestStatus | null
   createdAt: Date | null
   updatedAt: Date | null
-  userId: string | null
+  requesterId: string | null
   postId: string | null
 }
 
@@ -40,7 +40,7 @@ export type AdoptionRequestMaxAggregateOutputType = {
   status: $Enums.AdoptionRequestStatus | null
   createdAt: Date | null
   updatedAt: Date | null
-  userId: string | null
+  requesterId: string | null
   postId: string | null
 }
 
@@ -50,7 +50,7 @@ export type AdoptionRequestCountAggregateOutputType = {
   status: number
   createdAt: number
   updatedAt: number
-  userId: number
+  requesterId: number
   postId: number
   _all: number
 }
@@ -62,7 +62,7 @@ export type AdoptionRequestMinAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
-  userId?: true
+  requesterId?: true
   postId?: true
 }
 
@@ -72,7 +72,7 @@ export type AdoptionRequestMaxAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
-  userId?: true
+  requesterId?: true
   postId?: true
 }
 
@@ -82,7 +82,7 @@ export type AdoptionRequestCountAggregateInputType = {
   status?: true
   createdAt?: true
   updatedAt?: true
-  userId?: true
+  requesterId?: true
   postId?: true
   _all?: true
 }
@@ -165,7 +165,7 @@ export type AdoptionRequestGroupByOutputType = {
   status: $Enums.AdoptionRequestStatus
   createdAt: Date
   updatedAt: Date
-  userId: string
+  requesterId: string
   postId: string
   _count: AdoptionRequestCountAggregateOutputType | null
   _min: AdoptionRequestMinAggregateOutputType | null
@@ -196,9 +196,9 @@ export type AdoptionRequestWhereInput = {
   status?: Prisma.EnumAdoptionRequestStatusFilter<"AdoptionRequest"> | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFilter<"AdoptionRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdoptionRequest"> | Date | string
-  userId?: Prisma.StringFilter<"AdoptionRequest"> | string
+  requesterId?: Prisma.StringFilter<"AdoptionRequest"> | string
   postId?: Prisma.StringFilter<"AdoptionRequest"> | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  requester?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.AdoptionPostScalarRelationFilter, Prisma.AdoptionPostWhereInput>
 }
 
@@ -208,15 +208,15 @@ export type AdoptionRequestOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  requesterId?: Prisma.SortOrder
   postId?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
+  requester?: Prisma.UserOrderByWithRelationInput
   post?: Prisma.AdoptionPostOrderByWithRelationInput
 }
 
 export type AdoptionRequestWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  userId_postId?: Prisma.AdoptionRequestUserIdPostIdCompoundUniqueInput
+  requesterId_postId?: Prisma.AdoptionRequestRequesterIdPostIdCompoundUniqueInput
   AND?: Prisma.AdoptionRequestWhereInput | Prisma.AdoptionRequestWhereInput[]
   OR?: Prisma.AdoptionRequestWhereInput[]
   NOT?: Prisma.AdoptionRequestWhereInput | Prisma.AdoptionRequestWhereInput[]
@@ -224,11 +224,11 @@ export type AdoptionRequestWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumAdoptionRequestStatusFilter<"AdoptionRequest"> | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFilter<"AdoptionRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdoptionRequest"> | Date | string
-  userId?: Prisma.StringFilter<"AdoptionRequest"> | string
+  requesterId?: Prisma.StringFilter<"AdoptionRequest"> | string
   postId?: Prisma.StringFilter<"AdoptionRequest"> | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  requester?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   post?: Prisma.XOR<Prisma.AdoptionPostScalarRelationFilter, Prisma.AdoptionPostWhereInput>
-}, "id" | "userId_postId">
+}, "id" | "requesterId_postId">
 
 export type AdoptionRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -236,7 +236,7 @@ export type AdoptionRequestOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  requesterId?: Prisma.SortOrder
   postId?: Prisma.SortOrder
   _count?: Prisma.AdoptionRequestCountOrderByAggregateInput
   _max?: Prisma.AdoptionRequestMaxOrderByAggregateInput
@@ -252,7 +252,7 @@ export type AdoptionRequestScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumAdoptionRequestStatusWithAggregatesFilter<"AdoptionRequest"> | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AdoptionRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AdoptionRequest"> | Date | string
-  userId?: Prisma.StringWithAggregatesFilter<"AdoptionRequest"> | string
+  requesterId?: Prisma.StringWithAggregatesFilter<"AdoptionRequest"> | string
   postId?: Prisma.StringWithAggregatesFilter<"AdoptionRequest"> | string
 }
 
@@ -262,7 +262,7 @@ export type AdoptionRequestCreateInput = {
   status?: $Enums.AdoptionRequestStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutAdoptionRequestsInput
+  requester: Prisma.UserCreateNestedOneWithoutAdoptionRequestsInput
   post: Prisma.AdoptionPostCreateNestedOneWithoutAdoptionRequestsInput
 }
 
@@ -272,7 +272,7 @@ export type AdoptionRequestUncheckedCreateInput = {
   status?: $Enums.AdoptionRequestStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  userId: string
+  requesterId: string
   postId: string
 }
 
@@ -282,7 +282,7 @@ export type AdoptionRequestUpdateInput = {
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutAdoptionRequestsNestedInput
+  requester?: Prisma.UserUpdateOneRequiredWithoutAdoptionRequestsNestedInput
   post?: Prisma.AdoptionPostUpdateOneRequiredWithoutAdoptionRequestsNestedInput
 }
 
@@ -292,7 +292,7 @@ export type AdoptionRequestUncheckedUpdateInput = {
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   postId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -302,7 +302,7 @@ export type AdoptionRequestCreateManyInput = {
   status?: $Enums.AdoptionRequestStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  userId: string
+  requesterId: string
   postId: string
 }
 
@@ -320,7 +320,7 @@ export type AdoptionRequestUncheckedUpdateManyInput = {
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requesterId?: Prisma.StringFieldUpdateOperationsInput | string
   postId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -334,8 +334,8 @@ export type AdoptionRequestOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type AdoptionRequestUserIdPostIdCompoundUniqueInput = {
-  userId: string
+export type AdoptionRequestRequesterIdPostIdCompoundUniqueInput = {
+  requesterId: string
   postId: string
 }
 
@@ -345,7 +345,7 @@ export type AdoptionRequestCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  requesterId?: Prisma.SortOrder
   postId?: Prisma.SortOrder
 }
 
@@ -355,7 +355,7 @@ export type AdoptionRequestMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  requesterId?: Prisma.SortOrder
   postId?: Prisma.SortOrder
 }
 
@@ -365,49 +365,49 @@ export type AdoptionRequestMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  requesterId?: Prisma.SortOrder
   postId?: Prisma.SortOrder
 }
 
-export type AdoptionRequestCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutUserInput, Prisma.AdoptionRequestUncheckedCreateWithoutUserInput> | Prisma.AdoptionRequestCreateWithoutUserInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutUserInput | Prisma.AdoptionRequestCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AdoptionRequestCreateManyUserInputEnvelope
+export type AdoptionRequestCreateNestedManyWithoutRequesterInput = {
+  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput> | Prisma.AdoptionRequestCreateWithoutRequesterInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput[]
+  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput | Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput[]
+  createMany?: Prisma.AdoptionRequestCreateManyRequesterInputEnvelope
   connect?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
 }
 
-export type AdoptionRequestUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutUserInput, Prisma.AdoptionRequestUncheckedCreateWithoutUserInput> | Prisma.AdoptionRequestCreateWithoutUserInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutUserInput | Prisma.AdoptionRequestCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AdoptionRequestCreateManyUserInputEnvelope
+export type AdoptionRequestUncheckedCreateNestedManyWithoutRequesterInput = {
+  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput> | Prisma.AdoptionRequestCreateWithoutRequesterInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput[]
+  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput | Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput[]
+  createMany?: Prisma.AdoptionRequestCreateManyRequesterInputEnvelope
   connect?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
 }
 
-export type AdoptionRequestUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutUserInput, Prisma.AdoptionRequestUncheckedCreateWithoutUserInput> | Prisma.AdoptionRequestCreateWithoutUserInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutUserInput | Prisma.AdoptionRequestCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutUserInput | Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AdoptionRequestCreateManyUserInputEnvelope
+export type AdoptionRequestUpdateManyWithoutRequesterNestedInput = {
+  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput> | Prisma.AdoptionRequestCreateWithoutRequesterInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput[]
+  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput | Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput[]
+  upsert?: Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutRequesterInput | Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutRequesterInput[]
+  createMany?: Prisma.AdoptionRequestCreateManyRequesterInputEnvelope
   set?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
   disconnect?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
   delete?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
   connect?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
-  update?: Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutUserInput | Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AdoptionRequestUpdateManyWithWhereWithoutUserInput | Prisma.AdoptionRequestUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutRequesterInput | Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutRequesterInput[]
+  updateMany?: Prisma.AdoptionRequestUpdateManyWithWhereWithoutRequesterInput | Prisma.AdoptionRequestUpdateManyWithWhereWithoutRequesterInput[]
   deleteMany?: Prisma.AdoptionRequestScalarWhereInput | Prisma.AdoptionRequestScalarWhereInput[]
 }
 
-export type AdoptionRequestUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutUserInput, Prisma.AdoptionRequestUncheckedCreateWithoutUserInput> | Prisma.AdoptionRequestCreateWithoutUserInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutUserInput | Prisma.AdoptionRequestCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutUserInput | Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AdoptionRequestCreateManyUserInputEnvelope
+export type AdoptionRequestUncheckedUpdateManyWithoutRequesterNestedInput = {
+  create?: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput> | Prisma.AdoptionRequestCreateWithoutRequesterInput[] | Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput[]
+  connectOrCreate?: Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput | Prisma.AdoptionRequestCreateOrConnectWithoutRequesterInput[]
+  upsert?: Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutRequesterInput | Prisma.AdoptionRequestUpsertWithWhereUniqueWithoutRequesterInput[]
+  createMany?: Prisma.AdoptionRequestCreateManyRequesterInputEnvelope
   set?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
   disconnect?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
   delete?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
   connect?: Prisma.AdoptionRequestWhereUniqueInput | Prisma.AdoptionRequestWhereUniqueInput[]
-  update?: Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutUserInput | Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AdoptionRequestUpdateManyWithWhereWithoutUserInput | Prisma.AdoptionRequestUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutRequesterInput | Prisma.AdoptionRequestUpdateWithWhereUniqueWithoutRequesterInput[]
+  updateMany?: Prisma.AdoptionRequestUpdateManyWithWhereWithoutRequesterInput | Prisma.AdoptionRequestUpdateManyWithWhereWithoutRequesterInput[]
   deleteMany?: Prisma.AdoptionRequestScalarWhereInput | Prisma.AdoptionRequestScalarWhereInput[]
 }
 
@@ -457,7 +457,7 @@ export type EnumAdoptionRequestStatusFieldUpdateOperationsInput = {
   set?: $Enums.AdoptionRequestStatus
 }
 
-export type AdoptionRequestCreateWithoutUserInput = {
+export type AdoptionRequestCreateWithoutRequesterInput = {
   id?: string
   message: string
   status?: $Enums.AdoptionRequestStatus
@@ -466,7 +466,7 @@ export type AdoptionRequestCreateWithoutUserInput = {
   post: Prisma.AdoptionPostCreateNestedOneWithoutAdoptionRequestsInput
 }
 
-export type AdoptionRequestUncheckedCreateWithoutUserInput = {
+export type AdoptionRequestUncheckedCreateWithoutRequesterInput = {
   id?: string
   message: string
   status?: $Enums.AdoptionRequestStatus
@@ -475,30 +475,30 @@ export type AdoptionRequestUncheckedCreateWithoutUserInput = {
   postId: string
 }
 
-export type AdoptionRequestCreateOrConnectWithoutUserInput = {
+export type AdoptionRequestCreateOrConnectWithoutRequesterInput = {
   where: Prisma.AdoptionRequestWhereUniqueInput
-  create: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutUserInput, Prisma.AdoptionRequestUncheckedCreateWithoutUserInput>
+  create: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput>
 }
 
-export type AdoptionRequestCreateManyUserInputEnvelope = {
-  data: Prisma.AdoptionRequestCreateManyUserInput | Prisma.AdoptionRequestCreateManyUserInput[]
+export type AdoptionRequestCreateManyRequesterInputEnvelope = {
+  data: Prisma.AdoptionRequestCreateManyRequesterInput | Prisma.AdoptionRequestCreateManyRequesterInput[]
   skipDuplicates?: boolean
 }
 
-export type AdoptionRequestUpsertWithWhereUniqueWithoutUserInput = {
+export type AdoptionRequestUpsertWithWhereUniqueWithoutRequesterInput = {
   where: Prisma.AdoptionRequestWhereUniqueInput
-  update: Prisma.XOR<Prisma.AdoptionRequestUpdateWithoutUserInput, Prisma.AdoptionRequestUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutUserInput, Prisma.AdoptionRequestUncheckedCreateWithoutUserInput>
+  update: Prisma.XOR<Prisma.AdoptionRequestUpdateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedUpdateWithoutRequesterInput>
+  create: Prisma.XOR<Prisma.AdoptionRequestCreateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedCreateWithoutRequesterInput>
 }
 
-export type AdoptionRequestUpdateWithWhereUniqueWithoutUserInput = {
+export type AdoptionRequestUpdateWithWhereUniqueWithoutRequesterInput = {
   where: Prisma.AdoptionRequestWhereUniqueInput
-  data: Prisma.XOR<Prisma.AdoptionRequestUpdateWithoutUserInput, Prisma.AdoptionRequestUncheckedUpdateWithoutUserInput>
+  data: Prisma.XOR<Prisma.AdoptionRequestUpdateWithoutRequesterInput, Prisma.AdoptionRequestUncheckedUpdateWithoutRequesterInput>
 }
 
-export type AdoptionRequestUpdateManyWithWhereWithoutUserInput = {
+export type AdoptionRequestUpdateManyWithWhereWithoutRequesterInput = {
   where: Prisma.AdoptionRequestScalarWhereInput
-  data: Prisma.XOR<Prisma.AdoptionRequestUpdateManyMutationInput, Prisma.AdoptionRequestUncheckedUpdateManyWithoutUserInput>
+  data: Prisma.XOR<Prisma.AdoptionRequestUpdateManyMutationInput, Prisma.AdoptionRequestUncheckedUpdateManyWithoutRequesterInput>
 }
 
 export type AdoptionRequestScalarWhereInput = {
@@ -510,7 +510,7 @@ export type AdoptionRequestScalarWhereInput = {
   status?: Prisma.EnumAdoptionRequestStatusFilter<"AdoptionRequest"> | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFilter<"AdoptionRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AdoptionRequest"> | Date | string
-  userId?: Prisma.StringFilter<"AdoptionRequest"> | string
+  requesterId?: Prisma.StringFilter<"AdoptionRequest"> | string
   postId?: Prisma.StringFilter<"AdoptionRequest"> | string
 }
 
@@ -520,7 +520,7 @@ export type AdoptionRequestCreateWithoutPostInput = {
   status?: $Enums.AdoptionRequestStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutAdoptionRequestsInput
+  requester: Prisma.UserCreateNestedOneWithoutAdoptionRequestsInput
 }
 
 export type AdoptionRequestUncheckedCreateWithoutPostInput = {
@@ -529,7 +529,7 @@ export type AdoptionRequestUncheckedCreateWithoutPostInput = {
   status?: $Enums.AdoptionRequestStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  userId: string
+  requesterId: string
 }
 
 export type AdoptionRequestCreateOrConnectWithoutPostInput = {
@@ -558,7 +558,7 @@ export type AdoptionRequestUpdateManyWithWhereWithoutPostInput = {
   data: Prisma.XOR<Prisma.AdoptionRequestUpdateManyMutationInput, Prisma.AdoptionRequestUncheckedUpdateManyWithoutPostInput>
 }
 
-export type AdoptionRequestCreateManyUserInput = {
+export type AdoptionRequestCreateManyRequesterInput = {
   id?: string
   message: string
   status?: $Enums.AdoptionRequestStatus
@@ -567,7 +567,7 @@ export type AdoptionRequestCreateManyUserInput = {
   postId: string
 }
 
-export type AdoptionRequestUpdateWithoutUserInput = {
+export type AdoptionRequestUpdateWithoutRequesterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
@@ -576,7 +576,7 @@ export type AdoptionRequestUpdateWithoutUserInput = {
   post?: Prisma.AdoptionPostUpdateOneRequiredWithoutAdoptionRequestsNestedInput
 }
 
-export type AdoptionRequestUncheckedUpdateWithoutUserInput = {
+export type AdoptionRequestUncheckedUpdateWithoutRequesterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
@@ -585,7 +585,7 @@ export type AdoptionRequestUncheckedUpdateWithoutUserInput = {
   postId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type AdoptionRequestUncheckedUpdateManyWithoutUserInput = {
+export type AdoptionRequestUncheckedUpdateManyWithoutRequesterInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
@@ -600,7 +600,7 @@ export type AdoptionRequestCreateManyPostInput = {
   status?: $Enums.AdoptionRequestStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  userId: string
+  requesterId: string
 }
 
 export type AdoptionRequestUpdateWithoutPostInput = {
@@ -609,7 +609,7 @@ export type AdoptionRequestUpdateWithoutPostInput = {
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutAdoptionRequestsNestedInput
+  requester?: Prisma.UserUpdateOneRequiredWithoutAdoptionRequestsNestedInput
 }
 
 export type AdoptionRequestUncheckedUpdateWithoutPostInput = {
@@ -618,7 +618,7 @@ export type AdoptionRequestUncheckedUpdateWithoutPostInput = {
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requesterId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type AdoptionRequestUncheckedUpdateManyWithoutPostInput = {
@@ -627,7 +627,7 @@ export type AdoptionRequestUncheckedUpdateManyWithoutPostInput = {
   status?: Prisma.EnumAdoptionRequestStatusFieldUpdateOperationsInput | $Enums.AdoptionRequestStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  requesterId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -638,9 +638,9 @@ export type AdoptionRequestSelect<ExtArgs extends runtime.Types.Extensions.Inter
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  userId?: boolean
+  requesterId?: boolean
   postId?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.AdoptionPostDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["adoptionRequest"]>
 
@@ -650,9 +650,9 @@ export type AdoptionRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  userId?: boolean
+  requesterId?: boolean
   postId?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.AdoptionPostDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["adoptionRequest"]>
 
@@ -662,9 +662,9 @@ export type AdoptionRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  userId?: boolean
+  requesterId?: boolean
   postId?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.AdoptionPostDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["adoptionRequest"]>
 
@@ -674,28 +674,28 @@ export type AdoptionRequestSelectScalar = {
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  userId?: boolean
+  requesterId?: boolean
   postId?: boolean
 }
 
-export type AdoptionRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "message" | "status" | "createdAt" | "updatedAt" | "userId" | "postId", ExtArgs["result"]["adoptionRequest"]>
+export type AdoptionRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "message" | "status" | "createdAt" | "updatedAt" | "requesterId" | "postId", ExtArgs["result"]["adoptionRequest"]>
 export type AdoptionRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.AdoptionPostDefaultArgs<ExtArgs>
 }
 export type AdoptionRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.AdoptionPostDefaultArgs<ExtArgs>
 }
 export type AdoptionRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  requester?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   post?: boolean | Prisma.AdoptionPostDefaultArgs<ExtArgs>
 }
 
 export type $AdoptionRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AdoptionRequest"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    requester: Prisma.$UserPayload<ExtArgs>
     post: Prisma.$AdoptionPostPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -704,7 +704,7 @@ export type $AdoptionRequestPayload<ExtArgs extends runtime.Types.Extensions.Int
     status: $Enums.AdoptionRequestStatus
     createdAt: Date
     updatedAt: Date
-    userId: string
+    requesterId: string
     postId: string
   }, ExtArgs["result"]["adoptionRequest"]>
   composites: {}
@@ -1100,7 +1100,7 @@ readonly fields: AdoptionRequestFieldRefs;
  */
 export interface Prisma__AdoptionRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  requester<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   post<T extends Prisma.AdoptionPostDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AdoptionPostDefaultArgs<ExtArgs>>): Prisma.Prisma__AdoptionPostClient<runtime.Types.Result.GetResult<Prisma.$AdoptionPostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1136,7 +1136,7 @@ export interface AdoptionRequestFieldRefs {
   readonly status: Prisma.FieldRef<"AdoptionRequest", 'AdoptionRequestStatus'>
   readonly createdAt: Prisma.FieldRef<"AdoptionRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"AdoptionRequest", 'DateTime'>
-  readonly userId: Prisma.FieldRef<"AdoptionRequest", 'String'>
+  readonly requesterId: Prisma.FieldRef<"AdoptionRequest", 'String'>
   readonly postId: Prisma.FieldRef<"AdoptionRequest", 'String'>
 }
     

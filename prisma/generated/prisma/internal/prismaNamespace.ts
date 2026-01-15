@@ -974,7 +974,7 @@ export const AdoptionRequestScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  userId: 'userId',
+  requesterId: 'requesterId',
   postId: 'postId'
 } as const
 
