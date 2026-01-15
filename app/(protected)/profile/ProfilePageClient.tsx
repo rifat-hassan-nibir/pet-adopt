@@ -346,7 +346,7 @@ export default function ProfilePageClient({
                             {request.requester?.image ? (
                               <Image
                                 src={request.requester.image}
-                                alt={request.requester.name}
+                                alt={request.requester.name || "Unknown"}
                                 width={48}
                                 height={48}
                                 className="w-12 h-12 rounded-full object-cover shrink-0"

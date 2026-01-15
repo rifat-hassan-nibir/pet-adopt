@@ -7,6 +7,7 @@ import Textarea from "@/components/ui/Textarea";
 import LoginToolTip from "@/components/ui/ToolTip";
 import { auth } from "@/lib/auth";
 import { Pet, User } from "@/lib/types";
+import { set } from "better-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -31,7 +32,36 @@ export default function PetDetailsClient({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    try {
+      setIsSubmitting(true);
+      const response = await fetch("/api/adoption-request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData, postId: pet.id }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send adoption request");
+      }
+
+      // Success - show message and close modal
+      alert(data.message || "Adoption request sent successfully!");
+      setIsModalOpen(false);
+      setFormData({ message: "" });
+    } catch (error) {
+      console.log(error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to create adoption request. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
