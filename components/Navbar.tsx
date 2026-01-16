@@ -8,6 +8,7 @@ import Modal from "./ui/Modal";
 import { logout } from "@/app/actions/auth";
 import { auth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Session = typeof auth.$Infer.Session;
 
@@ -20,7 +21,7 @@ export default function Navbar({ session }: { session: Session | null }) {
 
   const handleCreatePostClick = () => {
     setIsCreateModalOpen(true);
-    setIsMenuOpen(false); // Close mobile menu if open
+    setIsMenuOpen(false);
   };
 
   const handleLogout = async () => {
@@ -28,7 +29,6 @@ export default function Navbar({ session }: { session: Session | null }) {
     router.push("/login");
   };
 
-  // Close avatar dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -50,6 +50,17 @@ export default function Navbar({ session }: { session: Session | null }) {
 
   const handleAvatarMenuItemClick = () => {
     setIsAvatarDropdownOpen(false);
+  };
+
+  // Get user initials from name
+  const getUserInitials = (name?: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   return (
@@ -123,14 +134,24 @@ export default function Navbar({ session }: { session: Session | null }) {
               <div className="relative" ref={avatarDropdownRef}>
                 <button
                   onClick={() => setIsAvatarDropdownOpen(!isAvatarDropdownOpen)}
-                  className="hover:cursor-pointer flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 hover:bg-emerald-200 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                  className="hover:cursor-pointer flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 hover:bg-emerald-200 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 overflow-hidden"
                   aria-haspopup="true"
                   aria-expanded={isAvatarDropdownOpen}
                   aria-label="User menu"
                 >
-                  <span className="text-emerald-700 font-semibold text-sm">
-                    JD
-                  </span>
+                  {session?.user?.image ? (
+                    <Image
+                      src={session.user.image}
+                      alt={session.user.name || "User"}
+                      width={40}
+                      height={40}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-emerald-700 font-semibold text-sm">
+                      {getUserInitials(session?.user?.name)}
+                    </span>
+                  )}
                 </button>
 
                 {/* Dropdown Menu */}
@@ -143,29 +164,15 @@ export default function Navbar({ session }: { session: Session | null }) {
                 >
                   {session?.user ? (
                     <>
-                      {/* Logout Item */}
-                      <button
-                        onClick={handleLogout}
-                        className="hover:cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                          />
-                        </svg>
-                        <span>Log Out</span>
-                      </button>
-
-                      <hr className="my-1 border-gray-100" />
+                      {/* User Info Header */}
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {session.user.name}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {session.user.email}
+                        </p>
+                      </div>
 
                       {/* Profile Item */}
                       <Link
@@ -189,6 +196,30 @@ export default function Navbar({ session }: { session: Session | null }) {
                         </svg>
                         Profile
                       </Link>
+
+                      <hr className="my-1 border-gray-100" />
+
+                      {/* Logout Item */}
+                      <button
+                        onClick={handleLogout}
+                        className="hover:cursor-pointer w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                          />
+                        </svg>
+                        <span>Log Out</span>
+                      </button>
                     </>
                   ) : (
                     <>
@@ -277,6 +308,35 @@ export default function Navbar({ session }: { session: Session | null }) {
         {isMenuOpen && (
           <div className="md:hidden border-t border-gray-100 bg-white">
             <div className="px-4 py-4 space-y-3">
+              {/* User Info - Mobile */}
+              {session?.user && (
+                <div className="flex items-center gap-3 pb-3 border-b border-gray-100">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center overflow-hidden">
+                    {session.user.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt={session.user.name || "User"}
+                        width={40}
+                        height={40}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-emerald-700 font-semibold text-sm">
+                        {getUserInitials(session.user.name)}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {session.user.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {session.user.email}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <Link
                 href="/"
                 className="block py-2 text-gray-600 hover:text-emerald-600 font-medium"
@@ -291,7 +351,6 @@ export default function Navbar({ session }: { session: Session | null }) {
               >
                 Adopt
               </Link>
-              {/* Create Post Button - Mobile */}
               <Button fullWidth onClick={handleCreatePostClick}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -308,16 +367,10 @@ export default function Navbar({ session }: { session: Session | null }) {
                   />
                 </svg>
                 Create Post
-              </Button>{" "}
+              </Button>
               <hr className="my-3" />
               {session?.user ? (
                 <>
-                  <button
-                    className="block py-2 text-gray-600 hover:text-emerald-600 font-medium"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
                   <Link
                     href="/profile"
                     className="block py-2 text-gray-600 hover:text-emerald-600 font-medium"
@@ -325,6 +378,12 @@ export default function Navbar({ session }: { session: Session | null }) {
                   >
                     Profile
                   </Link>
+                  <button
+                    className="block py-2 text-red-600 hover:text-red-700 font-medium"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
                 </>
               ) : (
                 <>

@@ -365,7 +365,7 @@ export default function ProfilePageClient({
               </div>
 
               {/* Edit Profile Button */}
-              <Button variant="outline" fullWidth className="mt-4">
+              {/* <Button variant="outline" fullWidth className="mt-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-2"
@@ -381,7 +381,7 @@ export default function ProfilePageClient({
                   />
                 </svg>
                 Edit Profile
-              </Button>
+              </Button> */}
             </DashboardCard>
           </div>
 
