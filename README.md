@@ -174,27 +174,6 @@ See `prisma/schema.prisma` for the complete schema.
 
 ⚠️ = Optional but recommended
 
-## 🚢 Deployment
-
-### Deploy to Vercel
-
-1. Push your code to GitHub
-2. Import your repository to Vercel
-3. Add environment variables in Vercel dashboard
-4. Update `BETTER_AUTH_URL` to your production domain
-5. Update Google OAuth redirect URIs:
-   - `https://your-domain.vercel.app/api/auth/callback/google`
-   - `https://your-domain.vercel.app`
-6. Deploy!
-
-### Important: Environment Variables on Vercel
-
-Make sure to check **all three environments** (Production, Preview, Development) when adding environment variables:
-
-- ✅ Production
-- ✅ Preview
-- ✅ Development
-
 ## 🧪 Testing
 
 ```bash
@@ -229,28 +208,5 @@ npm run build
 - `POST /api/adoption-request` - Send adoption request
 - `GET /api/adoption-request` - Get user's requests
 - `PUT /api/adoption-request/:id` - Update request status
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) - The React Framework
-- [Prisma](https://www.prisma.io/) - Next-generation ORM
-- [Neon](https://neon.tech/) - Serverless Postgres
-- [Better Auth](https://www.better-auth.com/) - Authentication solution
-- [Tailwind CSS](https://tailwindcss.com/) - CSS Framework
-- [Vercel](https://vercel.com/) - Deployment platform
 
 Made with ❤️ for pets and their future families
