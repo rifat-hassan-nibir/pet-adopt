@@ -18,7 +18,7 @@ export default async function AdoptPage() {
           </p>
         </div>
       </div>
-      <AdoptPageClient pets={pets} />;
+      <AdoptPageClient pets={pets} />
     </div>
   );
 }

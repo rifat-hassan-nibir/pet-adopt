@@ -1,6 +1,7 @@
 "use client";
 
 import CreatePostForm from "@/components/CreatePostForm";
+import EditPostForm from "@/components/EditPostForm";
 import ActionButton from "@/components/ui/ActionButton";
 import Avatar from "@/components/ui/Avatar";
 import Button from "@/components/ui/Button";
@@ -12,6 +13,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import TabNavigation from "@/components/ui/TabNavigation";
 import { AdoptionPost, AdoptionRequest, ProfileInfo } from "@/lib/types";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function ProfilePageClient({
@@ -25,6 +27,7 @@ export default function ProfilePageClient({
   adoptionRequestsSent: AdoptionRequest[];
   adoptionRequestsReceived: AdoptionRequest[];
 }) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("posts");
   const [selectedRequest, setSelectedRequest] =
     useState<AdoptionRequest | null>(null);
@@ -32,6 +35,14 @@ export default function ProfilePageClient({
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<AdoptionPost | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [postToEdit, setPostToEdit] = useState<AdoptionPost | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [requestModalSource, setRequestModalSource] = useState<
+    "received" | "sent" | null
+  >(null);
+  const [isUpdatingRequest, setIsUpdatingRequest] = useState(false);
+  const [isCancellingRequest, setIsCancellingRequest] = useState(false);
 
   // Calculate counts
   const adoptedCount =
@@ -39,28 +50,154 @@ export default function ProfilePageClient({
   const pendingReceivedCount =
     adoptionRequestsReceived?.filter((r) => r.status === "PENDING").length || 0;
 
-  const handleViewRequest = (request: AdoptionRequest) => {
+  const handleViewRequest = (
+    request: AdoptionRequest,
+    source: "received" | "sent"
+  ) => {
     setSelectedRequest(request);
+    setRequestModalSource(source);
     setIsRequestModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsRequestModalOpen(false);
     setSelectedRequest(null);
+    setRequestModalSource(null);
   };
 
-  const handleApprove = () => {
-    alert(
-      `Request from ${selectedRequest?.requester?.name} approved! (Demo only)`
-    );
-    handleCloseModal();
+  const handleApprove = async () => {
+    if (!selectedRequest) return;
+
+    setIsUpdatingRequest(true);
+    try {
+      const response = await fetch(
+        `/api/adoption-request/${selectedRequest.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "APPROVED" }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to approve request");
+      }
+
+      alert(
+        `Request from ${selectedRequest.requester?.name} approved successfully!`
+      );
+      handleCloseModal();
+      // Refresh the page to show updated data
+      router.refresh();
+    } catch (error) {
+      console.error("Error approving request:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to approve request. Please try again."
+      );
+    } finally {
+      setIsUpdatingRequest(false);
+    }
   };
 
-  const handleReject = () => {
-    alert(
-      `Request from ${selectedRequest?.requester?.name} rejected! (Demo only)`
-    );
-    handleCloseModal();
+  const handleReject = async () => {
+    if (!selectedRequest) return;
+
+    setIsUpdatingRequest(true);
+    try {
+      const response = await fetch(
+        `/api/adoption-request/${selectedRequest.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "REJECTED" }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to reject request");
+      }
+
+      alert(`Request from ${selectedRequest.requester?.name} rejected.`);
+      handleCloseModal();
+      // Refresh the page to show updated data
+      router.refresh();
+    } catch (error) {
+      console.error("Error rejecting request:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to reject request. Please try again."
+      );
+    } finally {
+      setIsUpdatingRequest(false);
+    }
+  };
+
+  const handleApproveFromList = async (request: AdoptionRequest) => {
+    setIsUpdatingRequest(true);
+    try {
+      const response = await fetch(`/api/adoption-request/${request.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "APPROVED" }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to approve request");
+      }
+
+      alert(`Request from ${request.requester?.name} approved successfully!`);
+      // Refresh the page to show updated data
+      router.refresh();
+    } catch (error) {
+      console.error("Error approving request:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to approve request. Please try again."
+      );
+    } finally {
+      setIsUpdatingRequest(false);
+    }
+  };
+
+  const handleRejectFromList = async (request: AdoptionRequest) => {
+    setIsUpdatingRequest(true);
+    try {
+      const response = await fetch(`/api/adoption-request/${request.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "REJECTED" }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to reject request");
+      }
+
+      alert(`Request from ${request.requester?.name} rejected.`);
+      // Refresh the page to show updated data
+      router.refresh();
+    } catch (error) {
+      console.error("Error rejecting request:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to reject request. Please try again."
+      );
+    } finally {
+      setIsUpdatingRequest(false);
+    }
+  };
+
+  const handleEditClick = (post: AdoptionPost) => {
+    setPostToEdit(post);
+    setIsEditModalOpen(true);
   };
 
   const handleDeleteClick = (post: AdoptionPost) => {
@@ -68,15 +205,74 @@ export default function ProfilePageClient({
     setIsDeleteDialogOpen(true);
   };
 
-  const handleConfirmDelete = () => {
-    alert(`Post "${postToDelete?.name}" deleted! (Demo only)`);
-    setIsDeleteDialogOpen(false);
-    setPostToDelete(null);
+  const handleConfirmDelete = async () => {
+    if (!postToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/adoption-posts/${postToDelete.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to delete post");
+      }
+
+      alert(`Post "${postToDelete.name}" deleted successfully!`);
+      setIsDeleteDialogOpen(false);
+      setPostToDelete(null);
+      // Refresh the page to show updated data
+      router.refresh();
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to delete post. Please try again."
+      );
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleCancelDelete = () => {
     setIsDeleteDialogOpen(false);
     setPostToDelete(null);
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditModalOpen(false);
+    setPostToEdit(null);
+    // Refresh the page to show updated data
+    router.refresh();
+  };
+
+  const handleCancelRequest = async (request: AdoptionRequest) => {
+    setIsCancellingRequest(true);
+    try {
+      const response = await fetch(`/api/adoption-request/${request.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to cancel request");
+      }
+
+      alert("Request cancelled successfully!");
+      // Refresh the page to show updated data
+      router.refresh();
+    } catch (error) {
+      console.error("Error cancelling request:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to cancel request. Please try again."
+      );
+    } finally {
+      setIsCancellingRequest(false);
+    }
   };
 
   const tabs = [
@@ -169,7 +365,7 @@ export default function ProfilePageClient({
               </div>
 
               {/* Edit Profile Button */}
-              <Button variant="outline" fullWidth className="mt-4">
+              {/* <Button variant="outline" fullWidth className="mt-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-2"
@@ -185,7 +381,7 @@ export default function ProfilePageClient({
                   />
                 </svg>
                 Edit Profile
-              </Button>
+              </Button> */}
             </DashboardCard>
           </div>
 
@@ -258,7 +454,11 @@ export default function ProfilePageClient({
                               Posted On: {formatDate(post.createdAt)}
                             </span>
                             <div className="flex items-center gap-1">
-                              <ActionButton variant="default" title="Edit post">
+                              <ActionButton
+                                variant="default"
+                                title="Edit post"
+                                onClick={() => handleEditClick(post)}
+                              >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   className="h-4 w-4"
@@ -401,7 +601,9 @@ export default function ProfilePageClient({
                               variant="secondary"
                               size="sm"
                               className="flex-1 sm:flex-none"
-                              onClick={() => handleViewRequest(request)}
+                              onClick={() =>
+                                handleViewRequest(request, "received")
+                              }
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -430,6 +632,8 @@ export default function ProfilePageClient({
                                 <Button
                                   size="sm"
                                   className="flex-1 sm:flex-none"
+                                  onClick={() => handleApproveFromList(request)}
+                                  disabled={isUpdatingRequest}
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -447,7 +651,11 @@ export default function ProfilePageClient({
                                   </svg>
                                   Approve
                                 </Button>
-                                <button className="hover:cursor-pointer flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors inline-flex items-center justify-center">
+                                <button
+                                  onClick={() => handleRejectFromList(request)}
+                                  disabled={isUpdatingRequest}
+                                  className="hover:cursor-pointer flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors inline-flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-4 w-4 mr-1"
@@ -504,7 +712,7 @@ export default function ProfilePageClient({
             {activeTab === "requests_sent" && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Requests You've Sent
+                  Requests You&apos;ve Sent
                 </h3>
 
                 {adoptionRequestsSent && adoptionRequestsSent.length > 0 ? (
@@ -559,7 +767,7 @@ export default function ProfilePageClient({
                               variant="secondary"
                               size="sm"
                               className="flex-1 sm:flex-none"
-                              onClick={() => handleViewRequest(request)}
+                              onClick={() => handleViewRequest(request, "sent")}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -584,7 +792,11 @@ export default function ProfilePageClient({
                               View
                             </Button>
                             {request.status === "PENDING" && (
-                              <button className="hover:cursor-pointer flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors inline-flex items-center justify-center">
+                              <button
+                                onClick={() => handleCancelRequest(request)}
+                                disabled={isCancellingRequest}
+                                className="hover:cursor-pointer flex-1 sm:flex-none px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors inline-flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   className="h-4 w-4 mr-1"
@@ -599,7 +811,9 @@ export default function ProfilePageClient({
                                     d="M6 18L18 6M6 6l12 12"
                                   />
                                 </svg>
-                                Cancel
+                                {isCancellingRequest
+                                  ? "Cancelling..."
+                                  : "Cancel"}
                               </button>
                             )}
                           </div>
@@ -756,50 +970,57 @@ export default function ProfilePageClient({
                 variant="secondary"
                 onClick={handleCloseModal}
                 className="flex-1"
+                disabled={isUpdatingRequest}
               >
                 Close
               </Button>
-              {selectedRequest.status === "PENDING" && (
-                <>
-                  <button
-                    onClick={handleReject}
-                    className="hover:cursor-pointer flex-1 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors inline-flex items-center justify-center gap-2"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+              {selectedRequest.status === "PENDING" &&
+                requestModalSource === "received" && (
+                  <>
+                    <button
+                      onClick={handleReject}
+                      disabled={isUpdatingRequest}
+                      className="hover:cursor-pointer flex-1 px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                    Reject Request
-                  </button>
-                  <Button onClick={handleApprove} className="flex-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                      {isUpdatingRequest ? "Rejecting..." : "Reject Request"}
+                    </button>
+                    <Button
+                      onClick={handleApprove}
+                      className="flex-1"
+                      disabled={isUpdatingRequest}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                    Approve Request
-                  </Button>
-                </>
-              )}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      {isUpdatingRequest ? "Approving..." : "Approve Request"}
+                    </Button>
+                  </>
+                )}
             </div>
           </div>
         )}
@@ -818,6 +1039,28 @@ export default function ProfilePageClient({
         />
       </Modal>
 
+      {/* Edit Post Modal */}
+      {postToEdit && (
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setPostToEdit(null);
+          }}
+          title="Edit Adoption Post"
+          size="xl"
+        >
+          <EditPostForm
+            post={postToEdit}
+            onCancel={() => {
+              setIsEditModalOpen(false);
+              setPostToEdit(null);
+            }}
+            onSubmit={handleEditSuccess}
+          />
+        </Modal>
+      )}
+
       {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}
@@ -834,6 +1077,7 @@ export default function ProfilePageClient({
         confirmLabel="Delete Post"
         cancelLabel="Keep Post"
         variant="danger"
+        isLoading={isDeleting}
       />
     </div>
   );

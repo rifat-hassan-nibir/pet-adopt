@@ -10,12 +10,12 @@ import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import { petTypes } from "@/lib/data";
-import { useState } from "react";
-import { Pet } from "@/lib/types";
+import { AdoptionPost } from "@/lib/types";
+import { useMemo, useState } from "react";
 
 type SortOption = "newest" | "oldest" | "name-asc" | "name-desc";
 
-export default function AdoptPageClient({ pets }: { pets: Pet[] }) {
+export default function AdoptPageClient({ pets }: { pets: AdoptionPost[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [location, setLocation] = useState("");
@@ -29,6 +29,58 @@ export default function AdoptPageClient({ pets }: { pets: Pet[] }) {
   };
 
   const hasActiveFilters = searchTerm || selectedType || location;
+
+  // Filter and sort pets
+  const filteredAndSortedPets = useMemo(() => {
+    let filtered = [...pets];
+
+    // Filter by search term (name)
+    if (searchTerm) {
+      filtered = filtered.filter((pet) =>
+        pet.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by category/type
+    if (selectedType) {
+      filtered = filtered.filter(
+        (pet) => pet.category.toLowerCase() === selectedType.toLowerCase()
+      );
+    }
+
+    // Filter by location
+    if (location) {
+      filtered = filtered.filter((pet) =>
+        pet.location.toLowerCase().includes(location.toLowerCase())
+      );
+    }
+
+    // Sort pets
+    switch (sortBy) {
+      case "newest":
+        filtered.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        break;
+      case "oldest":
+        filtered.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+        break;
+      case "name-asc":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  }, [pets, searchTerm, selectedType, location, sortBy]);
 
   return (
     <>
@@ -113,8 +165,14 @@ export default function AdoptPageClient({ pets }: { pets: Pet[] }) {
           <div className="flex items-center gap-3">
             <p className="text-gray-600">
               Showing{" "}
-              <span className="font-semibold text-gray-900">{pets.length}</span>{" "}
-              {pets.length === 1 ? "pet" : "pets"}
+              <span className="font-semibold text-gray-900">
+                {filteredAndSortedPets.length}
+              </span>{" "}
+              {filteredAndSortedPets.length === 1 ? "pet" : "pets"}
+              {hasActiveFilters &&
+                filteredAndSortedPets.length !== pets.length && (
+                  <span className="text-gray-400"> of {pets.length} total</span>
+                )}
             </p>
             {hasActiveFilters && (
               <button
@@ -152,9 +210,9 @@ export default function AdoptPageClient({ pets }: { pets: Pet[] }) {
         </div>
 
         {/* Pet Grid or Empty State */}
-        {pets.length > 0 ? (
+        {filteredAndSortedPets.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {pets.map((pet: Pet) => (
+            {filteredAndSortedPets.map((pet) => (
               <AdoptionCard
                 key={pet.id}
                 id={pet.id}
@@ -185,24 +243,29 @@ export default function AdoptPageClient({ pets }: { pets: Pet[] }) {
               </svg>
             }
             title="No pets found"
-            description="Try adjusting your search or filter criteria to find more pets."
-            actionLabel="Clear Filters"
-            onAction={clearFilters}
+            description={
+              hasActiveFilters
+                ? "Try adjusting your search or filter criteria to find more pets."
+                : "No pets are currently available for adoption."
+            }
+            actionLabel={hasActiveFilters ? "Clear Filters" : undefined}
+            onAction={hasActiveFilters ? clearFilters : undefined}
           />
         )}
 
         {/* Load More - only show if there are results */}
-        {pets.length > 0 && pets.length >= 8 && (
-          <div className="text-center mt-12">
-            <Button
-              className="hover:cursor-pointer"
-              variant="outline"
-              size="lg"
-            >
-              Load More Pets
-            </Button>
-          </div>
-        )}
+        {filteredAndSortedPets.length > 0 &&
+          filteredAndSortedPets.length >= 8 && (
+            <div className="text-center mt-12">
+              <Button
+                className="hover:cursor-pointer"
+                variant="outline"
+                size="lg"
+              >
+                Load More Pets
+              </Button>
+            </div>
+          )}
       </div>
       {/* Back to Top Button */}
       <BackToTop />
