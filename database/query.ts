@@ -131,3 +131,50 @@ export const updateUserAdoptionPost = async (id: string, data: any) => {
     data,
   });
 };
+
+// Delete user adoption post by ID
+export const deleteUserAdoptionPost = async (id: string) => {
+  return await prisma.adoptionPost.delete({
+    where: { id },
+  });
+};
+
+// Update adoption request status
+export const updateAdoptionRequestStatus = async (
+  id: string,
+  status: "APPROVED" | "REJECTED"
+) => {
+  return await prisma.adoptionRequest.update({
+    where: { id },
+    data: { status },
+  });
+};
+
+// Get adoption request by ID
+export const getAdoptionRequestById = async (id: string) => {
+  return await prisma.adoptionRequest.findUnique({
+    where: { id },
+    include: {
+      requester: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+      post: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+        },
+      },
+    },
+  });
+};
