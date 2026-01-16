@@ -254,18 +254,12 @@ export default function AdoptPageClient({ pets }: { pets: AdoptionPost[] }) {
         )}
 
         {/* Load More - only show if there are results */}
-        {filteredAndSortedPets.length > 0 &&
-          filteredAndSortedPets.length >= 8 && (
-            <div className="text-center mt-12">
-              <Button
-                className="hover:cursor-pointer"
-                variant="outline"
-                size="lg"
-              >
-                Load More Pets
-              </Button>
-            </div>
-          )}
+
+        {/* <div className="text-center mt-12">
+          <Button className="hover:cursor-pointer" variant="outline" size="lg">
+            Load More Pets
+          </Button>
+        </div> */}
       </div>
       {/* Back to Top Button */}
       <BackToTop />
