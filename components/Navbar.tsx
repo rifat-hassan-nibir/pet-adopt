@@ -9,10 +9,10 @@ import { logout } from "@/app/actions/auth";
 import { auth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { authClient } from "@/lib/auth-client";
 
-type Session = typeof auth.$Infer.Session;
-
-export default function Navbar({ session }: { session: Session | null }) {
+export default function Navbar() {
+  const { data: session, isPending } = authClient.useSession();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -31,10 +31,7 @@ export default function Navbar({ session }: { session: Session | null }) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        avatarDropdownRef.current &&
-        !avatarDropdownRef.current.contains(event.target as Node)
-      ) {
+      if (avatarDropdownRef.current && !avatarDropdownRef.current.contains(event.target as Node)) {
         setIsAvatarDropdownOpen(false);
       }
     };
@@ -108,11 +105,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             {/* Right Side Actions - Desktop */}
             <div className="hidden md:flex items-center gap-3">
               {/* Create Post Button */}
-              <Button
-                className="hover:cursor-pointer"
-                size="sm"
-                onClick={handleCreatePostClick}
-              >
+              <Button className="hover:cursor-pointer" size="sm" onClick={handleCreatePostClick}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4 mr-2"
@@ -169,9 +162,7 @@ export default function Navbar({ session }: { session: Session | null }) {
                         <p className="text-sm font-medium text-gray-900 truncate">
                           {session.user.name}
                         </p>
-                        <p className="text-xs text-gray-500 truncate">
-                          {session.user.email}
-                        </p>
+                        <p className="text-xs text-gray-500 truncate">{session.user.email}</p>
                       </div>
 
                       {/* Profile Item */}
@@ -327,12 +318,8 @@ export default function Navbar({ session }: { session: Session | null }) {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {session.user.name}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {session.user.email}
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">{session.user.name}</p>
+                    <p className="text-xs text-gray-500">{session.user.email}</p>
                   </div>
                 </div>
               )}

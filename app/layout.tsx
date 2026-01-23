@@ -29,17 +29,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const session = await getUserSession();
-
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
         className={`${inter.variable} ${poppins.variable} antialiased min-h-screen flex flex-col`}
       >
-        <Navbar session={session} />
+        <Navbar />
         <main id="main-content" className="grow">
           {children}
         </main>
