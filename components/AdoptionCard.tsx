@@ -3,11 +3,11 @@
  */
 "use client";
 
+import { AdoptionCardProps } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Button from "./ui/Button";
-import { AdoptionCardProps } from "@/lib/types";
 
 export default function AdoptionCard({
   id,
@@ -18,6 +18,8 @@ export default function AdoptionCard({
   age,
 }: AdoptionCardProps) {
   const [isFavorited, setIsFavorited] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <article className="flex flex-col h-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-emerald-100 transition-all duration-300 group">
@@ -39,15 +41,9 @@ export default function AdoptionCard({
         <button
           onClick={() => setIsFavorited(!isFavorited)}
           className={`hover:cursor-pointer absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${
-            isFavorited
-              ? "bg-red-500 text-white"
-              : "bg-white/90 text-gray-600 hover:text-red-500"
+            isFavorited ? "bg-red-500 text-white" : "bg-white/90 text-gray-600 hover:text-red-500"
           }`}
-          aria-label={
-            isFavorited
-              ? `Remove ${name} from favorites`
-              : `Add ${name} to favorites`
-          }
+          aria-label={isFavorited ? `Remove ${name} from favorites` : `Add ${name} to favorites`}
           aria-pressed={isFavorited}
         >
           <svg
@@ -121,7 +117,12 @@ export default function AdoptionCard({
         </div>
 
         <Link href={`/adopt/${id}`} className="mt-auto">
-          <Button variant="outline" fullWidth>
+          <Button
+            variant="outline"
+            fullWidth
+            isLoading={isLoading}
+            onClick={() => setIsLoading(true)}
+          >
             View Details
           </Button>
         </Link>
